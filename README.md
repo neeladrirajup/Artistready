@@ -17,7 +17,8 @@ Open http://127.0.0.1:3000. Run `npm run typecheck` and `npm run build` to verif
 
 - Futuristic navy/cyan/gold and cinematic charcoal/gold designs based on the supplied mockups; switch styles in the header.
 - Responsive discovery with category, location, age, gender, language, skill, availability, text search, and sorting. Languages match any selected language; skills match all selected skills. Applied filters persist for the browser session.
-- Eight illustrative artist profiles with Profile, Work, Skills, and Details tabs.
+- Eight illustrative artist profiles with Profile, Work, Photos, Skills, and Details tabs.
+- Responsive photo galleries on the profile overview and Photos tab, with an enlarged viewer, next/previous controls, arrow-key navigation, and Escape to close. Galleries use existing sample artwork; uploading photos is not connected.
 - Film-set and portrait artwork displayed from the user-supplied reference images using SVG viewports. The reference images are copied to public/references without modifying the originals.
 - Illustrative Hyderabad map with sample artist links and zoom; no live location or geolocation service.
 - Sign-in, create-account, and password-recovery design pages. These explicitly explain that authentication is not connected; credentials are never stored or submitted.

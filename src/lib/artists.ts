@@ -1,6 +1,7 @@
 export type Crop = { file: string; x: number; y: number; w: number; h: number };
 export const artwork: Record<string, Crop> = {
   saanvi: { file: 'profile', x: 42, y: 138, w: 430, h: 353 },
+  'saanvi-editorial': { file: 'cinematic', x: 453, y: 384, w: 345, h: 269 },
   arjun: { file: 'cinematic', x: 49, y: 738, w: 345, h: 204 },
   meera: { file: 'cinematic', x: 492, y: 737, w: 334, h: 207 },
   vikram: { file: 'cinematic', x: 48, y: 1167, w: 341, h: 202 },
