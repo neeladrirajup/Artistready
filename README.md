@@ -19,7 +19,7 @@ Open http://127.0.0.1:3000. Run `npm run typecheck` and `npm run build` to verif
 - Responsive discovery with category, location, age, gender, language, skill, availability, text search, and sorting. Languages match any selected language; skills match all selected skills. Applied filters persist for the browser session.
 - Eight illustrative artist profiles with Profile, Work, Photos, Measurements, Skills, and Details tabs.
 - Responsive photo galleries on the profile overview and Photos tab, with an enlarged viewer, next/previous controls, arrow-key navigation, and Escape to close. Galleries use existing sample artwork; uploading photos is not connected.
-- Measurements section on the overview and a dedicated Measurements tab: 33 body measurements across overview, upper body, lower body, head/hands/feet, plus clothing and footwear sizes. Metric/imperial conversion is interactive. These are a shared illustrative sizing example, not any artist's actual measurements; no personal measurement collection or access-control claims are implemented.
+- Measurements section on the overview and a dedicated Measurements tab: height in feet and inches, weight in kg, and chest/bust, natural waist, and full hip/seat in inches, plus clothing and footwear sizes. These are a shared illustrative sizing example, not any artist's actual measurements; no personal measurement collection or access-control claims are implemented.
 - Film-set and portrait artwork displayed from the user-supplied reference images using SVG viewports. The reference images are copied to public/references without modifying the originals.
 - Illustrative Hyderabad map with sample artist links and zoom; no live location or geolocation service.
 - Sign-in, create-account, and password-recovery design pages. These explicitly explain that authentication is not connected; credentials are never stored or submitted.
@@ -44,4 +44,5 @@ All names, biographies, credits, availability, ages, and experience are sample c
 ## Next phase: application migration
 
 Choose authentication, shared database, and media storage before enabling real accounts. Existing SQL Server can be retained behind a Node.js data layer or migrated after reviewing all tables and procedures. Preserve existing password verification only as a transitional compatibility step and upgrade password hashes at successful sign-in. Add server validation, per-user authorization, upload controls, and migration checks before accepting real users. Existing production data has not been accessed or migrated.
+
 
