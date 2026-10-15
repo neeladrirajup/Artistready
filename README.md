@@ -15,13 +15,17 @@ Open http://127.0.0.1:3000. Run `npm run typecheck` and `npm run build` to verif
 
 ## Included in this preview
 
-- Responsive discovery page with category, location, availability, text search, and sorting.
-- Eight illustrative artist profiles with overview, selected credits, and gallery tabs.
+- Futuristic navy/cyan/gold and cinematic charcoal/gold designs based on the supplied mockups; switch styles in the header.
+- Responsive discovery with category, location, age, gender, language, skill, availability, text search, and sorting. Languages match any selected language; skills match all selected skills. Applied filters persist for the browser session.
+- Eight illustrative artist profiles with Profile, Work, Skills, and Details tabs.
+- Film-set and portrait artwork displayed from the user-supplied reference images using SVG viewports. The reference images are copied to public/references without modifying the originals.
+- Illustrative Hyderabad map with sample artist links and zoom; no live location or geolocation service.
+- Sign-in, create-account, and password-recovery design pages. These explicitly explain that authentication is not connected; credentials are never stored or submitted.
 - Saved artists persisted in this browser.
-- An artist-space form editing the Ananya Rao sample profile, persisted in this browser.
+- An artist-space form editing the Saanvi Reddy sample profile, persisted in this browser. Existing route identifiers are retained so previous profile links continue to work.
 - About page and shareable profile links.
 
-All names, biographies, credits, and availability are sample content. Portraits and illustrative images load from Unsplash; fonts load from Google Fonts. External assets require internet access. Repeated images are placeholders, not verified identities. Local links are only accessible on the device running the server. This preview does not authenticate users, connect to SQL Server, accept uploads, send messages, or store shared records.
+All names, biographies, credits, availability, ages, and experience are sample content. Fonts load from Google Fonts and have system fallbacks. Repeated portraits are placeholders, not verified identities. No verification badge or follower count is claimed. The profile-strength score is explicitly illustrative. This preview does not authenticate users, connect to SQL Server, accept uploads, send messages, or store shared records.
 
 ## Mapping from the original website
 
@@ -30,10 +34,10 @@ All names, biographies, credits, and availability are sample content. Portraits 
 | Profile and basic details | Artist space form and public profile |
 | Categories and arts specialties | Discovery categories and profile skills |
 | Projects, films, television | Credits tab; connect existing records later |
-| Photos and profile picture | Portrait and gallery layout; upload service later |
+| Photos and profile picture | Portrait and spotlight layout; upload service later |
 | Videos | Empty showreel state; media integration later |
 | Training and awards | Illustrative profile sections; full editing later |
-| Signup and login | Deferred until authentication and database decisions |
+| Signup and login | Design screens only; authentication and database integration later |
 
 ## Next phase: application migration
 
