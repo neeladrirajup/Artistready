@@ -71,3 +71,8 @@ Artist setup now includes inclusive gender selection with self-description and a
 
 A saved onboarding profile with name, role and city is now added as the first artist in the default discovery list on the same browser. It is searchable, filterable and can be saved to the shortlist. My profile opens /artists/my-profile and displays saved details and uploaded media without adding sample credits or measurements. Existing saved onboarding drafts are picked up automatically. This remains device-local; no public account or shared artist registry is created.
 
+
+## Professional profile sections
+
+Created profiles now share the same ProfileMeasurements component as sample artists, including the five body measurements and Clothing & footwear sizes. Empty user values are marked Not added. Project credits and a Work tab, professional training and recognition each support repeatable records in onboarding and direct profile editors. Edits save to the existing device-local draft and preserve photos, education and earlier details. No sample credits, awards or wardrobe sizes are copied into user profiles.
+
