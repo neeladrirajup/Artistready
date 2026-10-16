@@ -61,3 +61,8 @@ Choose authentication, shared database, and media storage before enabling real a
 
 The /create-profile page (also available at /signup) provides a cinematic four-step onboarding flow with required essentials, optional story/skills/languages, a portrait and showreel link, optional measurements, and a final review. It includes a live artist card, local draft saving and completion feedback. JPG, PNG and WebP portraits up to 1 MB are read locally and stored with the draft only in this browser; no files are uploaded to a server. Registration, public profile creation and authentication remain unconnected in this design preview. The flow is linked from the main navigation and sign-in page.
 
+
+## Registration field and media updates
+
+Artist setup now includes inclusive gender selection with self-description and a prefer-not-to-say option; a validated playing-age range; repeatable education/training; male, female and neutral measurement fits with separate chest/bust values; up to 20 portfolio photos (5 MB each); multiple showreel links; and one MP4/WebM upload strictly smaller than 50,000,000 bytes. Media files are saved as blobs in browser IndexedDB, with explicit storage-failure feedback. Photos can be selected as the profile portrait, previewed, and removed. Files are local to this device, and are not uploaded to a shared service or included in shared profile links.
+

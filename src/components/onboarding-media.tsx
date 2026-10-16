@@ -1,0 +1,33 @@
+'use client';
+import { useEffect, useRef, useState } from 'react';
+import { Camera, Check, Film, Plus, X } from 'lucide-react';
+import { mediaError } from '@/lib/onboarding-media';
+
+type StoredMedia={id:string;kind:'photo'|'video';file:File;created:number};
+type Media=StoredMedia&{url:string};
+function database():Promise<IDBDatabase>{return new Promise((resolve,reject)=>{const request=indexedDB.open('artist-ready-onboarding-media',1);request.onupgradeneeded=()=>request.result.createObjectStore('files',{keyPath:'id'});request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error);});}
+async function stored(action:'read'|'put'|'delete',value?:StoredMedia|string):Promise<StoredMedia[]>{const db=await database();try{return await new Promise((resolve,reject)=>{const tx=db.transaction('files',action==='read'?'readonly':'readwrite'),store=tx.objectStore('files');let rows:StoredMedia[]=[];if(action==='read'){const request=store.getAll();request.onsuccess=()=>{rows=request.result;};}else if(action==='put')store.put(value);else store.delete(value as string);tx.oncomplete=()=>resolve(rows);tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});}finally{db.close();}}
+export function useOnboardingMedia(){
+ const [items,setItems]=useState<Media[]>([]),[busy,setBusy]=useState(false),[message,setMessage]=useState('');
+ const urls=useRef(new Set<string>());
+ function attach(item:StoredMedia):Media{const url=URL.createObjectURL(item.file);urls.current.add(url);return {...item,url};}
+ useEffect(()=>{let active=true;stored('read').then(rows=>{if(active)setItems(rows.sort((a,b)=>a.created-b.created).map(attach));}).catch(()=>{if(active)setMessage('Media storage is unavailable. Files you choose will stay in this session only.');});return()=>{active=false;urls.current.forEach(url=>URL.revokeObjectURL(url));urls.current.clear();};},[]);
+ async function add(files:File[],kind:'photo'|'video'){
+  setMessage('');if(!files.length)return;const existing=items.filter(i=>i.kind==='photo');if(kind==='photo'&&existing.length+files.length>20){setMessage('You can add up to 20 photos. Remove a photo before adding more.');return;}
+  for(const file of files){const error=mediaError(file,kind);if(error){setMessage(file.name+': '+error);return;}}
+  setBusy(true);let persisted=true;const additions:Media[]=[];
+  try{for(const file of files){const item:StoredMedia={id:kind==='video'?'showreel':crypto.randomUUID(),kind,file,created:Date.now()};try{await stored('put',item);}catch{persisted=false;}additions.push(attach(item));}
+   if(kind==='video')items.filter(i=>i.kind==='video').forEach(i=>{URL.revokeObjectURL(i.url);urls.current.delete(i.url);});
+   setItems(current=>[...current.filter(i=>kind!=='video'||i.kind!=='video'),...additions]);setMessage(persisted?(kind==='photo'?'Photos added and saved on this device.':'Video added and saved on this device.'):'Files added for this session. Device storage could not save them; keep this page open.');
+  }finally{setBusy(false);}
+ }
+ async function remove(id:string){setBusy(true);try{await stored('delete',id);setMessage('File removed from this device.');}catch{setMessage('Removed from this session. Device storage is unavailable; a previously saved copy may return after reload.');}finally{const item=items.find(i=>i.id===id);if(item){URL.revokeObjectURL(item.url);urls.current.delete(item.url);}setItems(current=>current.filter(i=>i.id!==id));setBusy(false);}}
+ return {photos:items.filter(i=>i.kind==='photo'),video:items.find(i=>i.kind==='video'),busy,message,add,remove};
+}
+export function OnboardingMedia({media,coverId,onCover}:{media:ReturnType<typeof useOnboardingMedia>;coverId:string;onCover:(id:string)=>void}){
+ const photosInput=useRef<HTMLInputElement>(null),videoInput=useRef<HTMLInputElement>(null);
+ const cover=media.photos.find(i=>i.id===coverId)||media.photos[0];
+ return <><section className="ob-media-section" aria-labelledby="photo-upload-heading"><div className="ob-media-heading"><div><h3 id="photo-upload-heading">Photos & headshots</h3><p>Add portraits, full-length shots and looks for your portfolio.</p></div><span>{media.photos.length}/20</span></div><button type="button" className="ob-media-drop" disabled={media.busy} onClick={()=>photosInput.current?.click()}><Camera size={27}/><strong>{media.busy?'Working…':'Upload photos'}</strong><span>Select multiple photos · JPG, PNG, WebP · Up to 5 MB each</span><span className="ob-secondary"><Plus size={15}/>Choose photos</span></button><input ref={photosInput} type="file" hidden multiple accept="image/jpeg,image/png,image/webp" onChange={e=>{void media.add(Array.from(e.target.files||[]),'photo');e.target.value='';}}/>{media.photos.length>0&&<div className="ob-uploaded-photos">{media.photos.map((photo,i)=><div key={photo.id}><img src={photo.url} alt={'Portfolio photo '+(i+1)}/><button type="button" className="ob-remove-media" disabled={media.busy} onClick={()=>void media.remove(photo.id)} aria-label={'Remove photo '+(i+1)}><X size={14}/></button><button type="button" className="ob-cover-choice" aria-pressed={cover?.id===photo.id} onClick={()=>onCover(photo.id)}>{cover?.id===photo.id?<><Check size={12}/>Profile photo</>:'Use as profile photo'}</button></div>)}</div>}<p className="ob-help">The selected profile photo appears on your artist card. Photos are saved on this device only.</p></section>
+ <section className="ob-media-section" aria-labelledby="video-upload-heading"><div className="ob-media-heading"><div><h3 id="video-upload-heading">Upload a showreel video</h3><p>Upload a video, add links below, or use both.</p></div><Film size={19}/></div><button type="button" className="ob-secondary" disabled={media.busy} onClick={()=>videoInput.current?.click()}><Plus size={16}/>{media.video?'Replace video':'Upload video'}</button><input ref={videoInput} type="file" hidden accept="video/mp4,video/webm" onChange={e=>{void media.add(Array.from(e.target.files||[]),'video');e.target.value='';}}/><p className="ob-help">MP4 or WebM · Strictly less than 50 MB · Saved on this device only</p>{media.video&&<div className="ob-video-preview"><video controls preload="metadata" src={media.video.url} aria-label="Uploaded showreel preview"/><div><span>{media.video.file.name}<small>{(media.video.file.size/1_000_000).toFixed(2)} MB</small></span><button type="button" disabled={media.busy} aria-label="Remove showreel video" onClick={()=>void media.remove(media.video!.id)}><X size={17}/></button></div><small>If this video does not play, export it as H.264 MP4 or WebM and try again.</small></div>}</section>
+ {media.message&&<p role="status" className="ob-notice">{media.message}</p>}</>;
+}
