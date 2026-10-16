@@ -66,3 +66,8 @@ The /create-profile page (also available at /signup) provides a cinematic four-s
 
 Artist setup now includes inclusive gender selection with self-description and a prefer-not-to-say option; a validated playing-age range; repeatable education/training; male, female and neutral measurement fits with separate chest/bust values; up to 20 portfolio photos (5 MB each); multiple showreel links; and one MP4/WebM upload strictly smaller than 50,000,000 bytes. Media files are saved as blobs in browser IndexedDB, with explicit storage-failure feedback. Photos can be selected as the profile portrait, previewed, and removed. Files are local to this device, and are not uploaded to a shared service or included in shared profile links.
 
+
+## Created artist discovery preview
+
+A saved onboarding profile with name, role and city is now added as the first artist in the default discovery list on the same browser. It is searchable, filterable and can be saved to the shortlist. My profile opens /artists/my-profile and displays saved details and uploaded media without adding sample credits or measurements. Existing saved onboarding drafts are picked up automatically. This remains device-local; no public account or shared artist registry is created.
+
