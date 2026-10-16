@@ -81,3 +81,8 @@ Created profiles now share the same ProfileMeasurements component as sample arti
 
 Created profiles now offer focused native-dialog editors for essentials, profile photo, About, Skills, Languages, showreel links/video, gallery photos, credits, training, recognition, body measurements, wardrobe sizes and education. Ordinary fields use Save changes and Cancel; file uploads/removals save immediately and are clearly labelled. Photo and video editors expose only the relevant media controls. Editing a section preserves the other saved details and no longer opens the registration wizard.
 
+
+## Booking and availability
+
+Created profiles include a Booking & availability card on Overview and Details, using the sample booking card styling. Its focused editor saves open-to-enquiries status, available-from date, preferred locations, travel, representation, booking email/phone, contact display preference and notes. Availability stays in sync with the artist card. Booking contact is hidden by default; device-local persistence and section-specific saving remain unchanged.
+

@@ -2,12 +2,13 @@
 import { useEffect,useRef,useState } from 'react';
 import { Plus, X } from 'lucide-react';
 import { type Draft } from './create-profile';
+import { BookingFields } from './profile-booking-fields';
 import { CreditFields, MilestoneFields, ClothingFields } from './profile-career-fields';
 import { EducationFields, EssentialFields, TagFields } from './profile-section-fields';
 import { OnboardingMedia, type useOnboardingMedia } from './onboarding-media';
-export type ProfileSection='essentials'|'about'|'skills'|'languages'|'credits'|'training'|'recognition'|'measurements'|'clothing'|'education'|'photos'|'showreels';
-export const profileSectionKeys:Record<ProfileSection,(keyof Draft)[]>={essentials:['name','role','city','experience','gender','genderDescription','ageFrom','ageTo','available'],about:['bio'],skills:['skills'],languages:['languages'],credits:['credits'],training:['training'],recognition:['recognition'],measurements:['measurementFit','heightFeet','heightInches','weight','chest','bust','waist','hip'],clothing:['clothing'],education:['education'],photos:['photo','coverId'],showreels:['reel','reelLinks']};
-const titles:Record<ProfileSection,string>={essentials:'Essentials',about:'About',skills:'Skills',languages:'Languages',credits:'Project credits',training:'Training',recognition:'Recognition',measurements:'Measurements',clothing:'Clothing & footwear sizes',education:'Education',photos:'Photos',showreels:'Showreels & portfolio'};
+export type ProfileSection='booking'|'essentials'|'about'|'skills'|'languages'|'credits'|'training'|'recognition'|'measurements'|'clothing'|'education'|'photos'|'showreels';
+export const profileSectionKeys:Record<ProfileSection,(keyof Draft)[]>={booking:["available","bookingAvailableFrom","bookingTravel","bookingLocations","bookingRepresentative","bookingEmail","bookingPhone","bookingNotes","showBookingContact"],essentials:['name','role','city','experience','gender','genderDescription','ageFrom','ageTo','available'],about:['bio'],skills:['skills'],languages:['languages'],credits:['credits'],training:['training'],recognition:['recognition'],measurements:['measurementFit','heightFeet','heightInches','weight','chest','bust','waist','hip'],clothing:['clothing'],education:['education'],photos:['photo','coverId'],showreels:['reel','reelLinks']};
+const titles:Record<ProfileSection,string>={booking:'Booking & availability',essentials:'Essentials',about:'About',skills:'Skills',languages:'Languages',credits:'Project credits',training:'Training',recognition:'Recognition',measurements:'Measurements',clothing:'Clothing & footwear sizes',education:'Education',photos:'Photos',showreels:'Showreels & portfolio'};
 export function ProfileDetailsEditor({draft,section,media,onSave,onClose}:{draft:Draft;section:ProfileSection;media:ReturnType<typeof useOnboardingMedia>;onSave:(value:Draft)=>boolean;onClose:()=>void}){
  const [editing,setEditing]=useState(draft),[error,setError]=useState('');
  const ref=useRef<HTMLDialogElement>(null);
@@ -15,6 +16,7 @@ export function ProfileDetailsEditor({draft,section,media,onSave,onClose}:{draft
  const fit=editing.measurementFit||(editing.gender==='Male'||editing.gender==='Transgender man'?'male':editing.gender==='Female'||editing.gender==='Transgender woman'?'female':'neutral');
  const fields=[['heightFeet','Height (feet)'],['heightInches','Height (inches)'],['weight','Weight (kg)'],[fit==='female'?'bust':'chest',fit==='female'?'Bust (inches)':fit==='male'?'Chest (inches)':'Chest / bust (inches)'],['waist','Natural waist (inches)'],['hip','Full hip / seat (inches)']] as [keyof Draft,string][];
  return <dialog ref={ref} className="casting-modal created-details-modal" aria-label={'Edit '+titles[section]} onCancel={e=>{e.preventDefault();if(!media.busy)onClose();}}><div className="casting-modal-panel"><header><h2>{titles[section]}</h2><button autoFocus disabled={media.busy} onClick={onClose} aria-label="Close editor"><X size={20}/></button></header><form className="ob-fields" onSubmit={e=>{e.preventDefault();if(section==='essentials'&&editing.ageFrom&&editing.ageTo&&Number(editing.ageFrom)>Number(editing.ageTo)){setError('Playing age: From must not exceed To.');return;}if(onSave(editing))onClose();else setError('Your changes could not be saved. Please check browser storage and try again.');}}>
+ {section==='booking'&&<BookingFields value={editing} onChange={setEditing}/>}
  {section==='essentials'&&<EssentialFields value={editing} onChange={setEditing}/>}
  {section==='about'&&<label>Your introduction<textarea rows={6} maxLength={600} value={editing.bio} onChange={e=>setEditing({...editing,bio:e.target.value})}/><small>{editing.bio.length}/600 characters</small></label>}
  {(section==='skills'||section==='languages')&&<TagFields kind={section==='skills'?'Skills':'Languages'} value={editing[section]} onChange={value=>setEditing({...editing,[section]:value})}/>}
