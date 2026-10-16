@@ -15,7 +15,8 @@ Open http://127.0.0.1:3000. Run `npm run typecheck` and `npm run build` to verif
 
 ## Included in this preview
 
-- Casting-focused profile with a calm visual hierarchy, primary casting enquiry action, sample résumé PDF, and no illustrative profile-strength score on the public profile.
+- Casting-focused profile with a calm visual hierarchy, primary casting enquiry and Share profile actions, and no illustrative profile-strength score on the public profile.
+- Profile sharing replaces PDF download actions: an artist preview, canonical profile URL, copy-link confirmation/manual-copy fallback, and native device sharing where available. Site access permissions are preserved; browser-local edits are not transmitted by a profile link.
 - Editable browser-local showreel/scene/trailer links, booking email, representative, preferred locations, travel preference, availability date, and visibility settings. Supported videos: HTTPS YouTube, Vimeo, MP4, and WebM. Real media must be supplied; no sample video is falsely presented as a showreel.
 - Casting enquiry builder with copy-to-clipboard and optional email-draft action when a booking email is configured and displayed. No message is automatically sent and enquiry text is not persisted.
 - Eight downloadable one-page sample casting résumé PDFs under public/resumes. PDFs contain only baseline sample information and exclude browser-local edits, contact information, and private measurements. Regenerate with scripts/export-resume-data.mjs and scripts/create-resumes.py using Node.js and Python with reportlab, pypdf, and pypdfium2.
