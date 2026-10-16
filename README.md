@@ -76,3 +76,8 @@ A saved onboarding profile with name, role and city is now added as the first ar
 
 Created profiles now share the same ProfileMeasurements component as sample artists, including the five body measurements and Clothing & footwear sizes. Empty user values are marked Not added. Project credits and a Work tab, professional training and recognition each support repeatable records in onboarding and direct profile editors. Edits save to the existing device-local draft and preserve photos, education and earlier details. No sample credits, awards or wardrobe sizes are copied into user profiles.
 
+
+## Editing individual sections
+
+Created profiles now offer focused native-dialog editors for essentials, profile photo, About, Skills, Languages, showreel links/video, gallery photos, credits, training, recognition, body measurements, wardrobe sizes and education. Ordinary fields use Save changes and Cancel; file uploads/removals save immediately and are clearly labelled. Photo and video editors expose only the relevant media controls. Editing a section preserves the other saved details and no longer opens the registration wizard.
+
