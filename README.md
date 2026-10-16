@@ -86,3 +86,8 @@ Created profiles now offer focused native-dialog editors for essentials, profile
 
 Created profiles include a Booking & availability card on Overview and Details, using the sample booking card styling. Its focused editor saves open-to-enquiries status, available-from date, preferred locations, travel, representation, booking email/phone, contact display preference and notes. Availability stays in sync with the artist card. Booking contact is hidden by default; device-local persistence and section-specific saving remain unchanged.
 
+
+## Mobile-first sign-in preview
+
+/signin now provides a cinematic phone + OTP flow, a Google connection placeholder and verified-email recovery screens. /forgot-password opens the recovery flow directly. Demo code 123456 exercises both code steps; no real SMS/email, OAuth, account lookup, credentials storage, authentication or persistent login session is implemented. Phone and email values remain in component memory only. The completed demo links existing device-local profiles to their profile and new visitors to profile setup. A backend authentication provider, verified recovery-email enrolment, real delivery, sessions and server-side checks must be connected before real account use.
+
