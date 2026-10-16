@@ -56,3 +56,8 @@ Choose authentication, shared database, and media storage before enabling real a
 
 
 
+
+## First-time artist setup
+
+The /create-profile page (also available at /signup) provides a cinematic four-step onboarding flow with required essentials, optional story/skills/languages, a portrait and showreel link, optional measurements, and a final review. It includes a live artist card, local draft saving and completion feedback. JPG, PNG and WebP portraits up to 1 MB are read locally and stored with the draft only in this browser; no files are uploaded to a server. Registration, public profile creation and authentication remain unconnected in this design preview. The flow is linked from the main navigation and sign-in page.
+
