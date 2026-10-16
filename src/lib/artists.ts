@@ -9,7 +9,7 @@ export const artwork: Record<string, Crop> = {
   studio: { file: 'signin', x: 0, y: 160, w: 940, h: 217 },
   spotlight: { file: 'profile', x: 46, y: 837, w: 513, h: 170 },
 };
-export type Artist = { id: string; name: string; role: string; category: string; city: string; image: string; tagline: string; languages: string[]; skills: string[]; available: boolean; credits: number; experience: number; age: number; gender: string; genres: string[] };
+export type Artist = { id: string; name: string; role: string; additionalRoles?: string[]; category: string; city: string; image: string; tagline: string; languages: string[]; skills: string[]; available: boolean; credits: number; experience: number; age: number; gender: string; genres: string[] };
 export const categories = ['All', 'Actors', 'Actresses', 'Directors', 'Writers', 'Crew'];
 export const artists: Artist[] = [
   { id: 'ananya-rao', name: 'Saanvi Reddy', role: 'Actress', category: 'Actresses', city: 'Hyderabad', image: 'saanvi', tagline: 'Actor passionate about meaningful stories across film, OTT and theatre.', languages: ['Telugu', 'Hindi', 'English'], skills: ['Dance', 'Swimming', 'Driving', 'Karate'], available: true, credits: 28, experience: 3, age: 26, gender: 'Female', genres: ['Drama', 'Comedy', 'Romance'] },

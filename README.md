@@ -91,3 +91,8 @@ Created profiles include a Booking & availability card on Overview and Details, 
 
 /signin now provides a cinematic phone + OTP flow, a Google connection placeholder and verified-email recovery screens. /forgot-password opens the recovery flow directly. Demo code 123456 exercises both code steps; no real SMS/email, OAuth, account lookup, credentials storage, authentication or persistent login session is implemented. Phone and email values remain in component memory only. The completed demo links existing device-local profiles to their profile and new visitors to profile setup. A backend authentication provider, verified recovery-email enrolment, real delivery, sessions and server-side checks must be connected before real account use.
 
+
+## Reference profile feature comparison
+
+Compared the publicly visible structure of https://www.reelon.com/subhra-smita-priyadarshini01. Added multiple creative roles, editable skill categories (Technical, Soft Skills, Artistic Skills, Others), up to three pinned photo/video/link highlights, and project portfolio search/type filters with real local counts. Roles, skill categories and pins are also available during setup. Additional roles are searchable in discovery. No third-party artist identity, contacts, images, followers or connections were imported; real networking remains unconnected.
+
