@@ -24,3 +24,10 @@ export const artistPreferences = sqliteTable('artist_preferences', {
  document: text('document').notNull(), version: integer('version').notNull().default(1),
  createdAt: text('created_at').notNull(), updatedAt: text('updated_at').notNull(),
 });
+
+// Provisioned by administrators only. No browser-facing role assignment endpoint.
+export const verifiedManagers = sqliteTable('verified_managers', {
+ accountId: text('account_id').primaryKey(),
+ verifiedAt: text('verified_at').notNull(),
+ isActive: integer('is_active',{mode:'boolean'}).notNull().default(true),
+});

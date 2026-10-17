@@ -15,6 +15,13 @@
       "when": 1792246992573,
       "tag": "0001_noisy_daredevil",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1792247861313,
+      "tag": "0002_quiet_pandemic",
+      "breakpoints": true
     }
   ]
 }

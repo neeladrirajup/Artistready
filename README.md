@@ -68,3 +68,15 @@ not identity verification). No defaults or answers are inferred from playing age
 Run node scripts/preferences.test.mjs to verify persistence, ownership, privacy,
 origin checks, validation, conflict handling and clear-answer behavior in SQLite.
 The local PostgreSQL catalog remains separate from hosted D1; there is no live sync.
+
+Preferences now support only_me (default for existing records), managers, and
+everyone. Everyone means authenticated viewers who can access this Site; the
+Site audience is unchanged. GET /api/profile/preferences/:artistId applies these
+rules server-side and omits adult self-attestation from shared results. Writes
+remain owner-only. Shared preferences never enter the artist-list response.
+verified_managers is an administrator-managed allowlist of hashed authenticated
+account IDs, verification timestamps and active flags. No manager grants are
+seeded and no client-accessible role assignment endpoint exists. A profile role
+or claimed occupation never grants manager access. Managers-only remains private
+until an administrator approves manager accounts. Notes follow the same audience
+as answers. Tests cover all audiences, revoked managers and cross-owner writes.

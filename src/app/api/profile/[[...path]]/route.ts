@@ -32,11 +32,22 @@ async function handle(request:Request){
    const media=await db.prepare('SELECT * FROM profile_media WHERE owner_id=? ORDER BY created_at,id').bind(owner).all<MediaRow>();
    return json({id:owner,draft:row?JSON.parse(row.document):null,version:row?.version??null,updatedAt:row?.updated_at??null,media:media.results.map(viewMedia)});
   }
-  // No artist ID parameter: preferences can only be accessed as the signed-in owner.
+  // Public profile lists never include preferences. Individual reads enforce audience here.
+  if(request.method==='GET'&&path.length===2&&path[0]==='preferences'&&/^[a-f0-9]{64}$/.test(path[1])){
+   const target=path[1];
+   const row=await db.prepare('SELECT document,version,updated_at FROM artist_preferences WHERE artist_id=?').bind(target).first<Row>();
+   if(!row)return json({error:'Preferences not available.'},404);
+   const preferences={...blankPreferences,...JSON.parse(row.document)};
+   let allowed=target===owner||preferences.visibility==='everyone';
+   if(!allowed&&preferences.visibility==='managers')allowed=!!await db.prepare('SELECT account_id FROM verified_managers WHERE account_id=? AND is_active=1').bind(owner).first();
+   if(!allowed)return json({error:'Preferences not available.'},404);
+   // Adult self-attestation is private account information, not a shared preference.
+   return json({preferences:target===owner?preferences:{visibility:preferences.visibility,answers:preferences.answers},version:target===owner?row.version:null,updatedAt:row.updated_at});
+  }
   if(path.length===1&&path[0]==='preferences'){
    if(request.method==='GET'){
     const row=await db.prepare('SELECT document,version,updated_at FROM artist_preferences WHERE artist_id=?').bind(owner).first<Row>();
-    return json({preferences:row?JSON.parse(row.document):blankPreferences,version:row?.version??null,updatedAt:row?.updated_at??null});
+    return json({preferences:row?{...blankPreferences,...JSON.parse(row.document)}:blankPreferences,version:row?.version??null,updatedAt:row?.updated_at??null});
    }
    if(request.method==='PUT'){
     const body=JSON.parse(new TextDecoder().decode(await boundedBody(request,50_000)));

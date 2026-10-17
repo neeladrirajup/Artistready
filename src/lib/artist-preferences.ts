@@ -23,7 +23,8 @@ export const preferenceOptions=[
  ['travel','Work conditions','Travel for projects',false],
  ['overnight_stays','Work conditions','Overnight stays',false],
 ] as const;
-export const preferencesSchema=z.object({adultConfirmed:z.boolean(),answers:z.record(z.string(),z.object({choice:z.enum(['okay','not_okay','discuss_first','not_disclosed']),notes:z.string().trim().max(1000)}))}).strict().superRefine((value,ctx)=>{
+export const preferenceVisibility=[['only_me','Only me'],['managers','Managers only'],['everyone','Everyone']] as const;
+export const preferencesSchema=z.object({visibility:z.enum(['only_me','managers','everyone']).default('only_me'),adultConfirmed:z.boolean(),answers:z.record(z.string(),z.object({choice:z.enum(['okay','not_okay','discuss_first','not_disclosed']),notes:z.string().trim().max(1000)}))}).strict().superRefine((value,ctx)=>{
  for(const code of Object.keys(value.answers)){
   const option=preferenceOptions.find(o=>o[0]===code);
   if(!option)ctx.addIssue({code:'custom',message:'Unknown preference.'});
@@ -32,4 +33,4 @@ export const preferencesSchema=z.object({adultConfirmed:z.boolean(),answers:z.re
 });
 export type Preferences=z.infer<typeof preferencesSchema>;
 export type PreferencesResponse={preferences:Preferences;version:number|null;updatedAt:string|null};
-export const blankPreferences:Preferences={adultConfirmed:false,answers:{}};
+export const blankPreferences:Preferences={visibility:'only_me',adultConfirmed:false,answers:{}};

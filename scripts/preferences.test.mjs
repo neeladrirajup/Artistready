@@ -8,6 +8,7 @@ const catalog=load('src/lib/artist-preferences.ts');
 const sql=new DatabaseSync(':memory:');
 sql.exec(readFileSync('drizzle/0000_empty_wild_child.sql','utf8'));
 sql.exec(readFileSync('drizzle/0001_noisy_daredevil.sql','utf8'));
+sql.exec(readFileSync('drizzle/0002_quiet_pandemic.sql','utf8'));
 const db={prepare(query){let params=[];return {bind(...args){params=args;return this;},async first(){return sql.prepare(query).get(...params)||null;},async all(){return {results:sql.prepare(query).all(...params)};},async run(){return {meta:{changes:Number(sql.prepare(query).run(...params).changes)}};}};}};
 const api=load('src/app/api/profile/[[...path]]/route.ts',{'cloudflare:workers':{env:{DB:db,BUCKET:{}}},'../../../../../lib/profile-runtime':{getProfileRuntime:()=>null},'@/lib/profile-validation':{profileSchema:{}},'@/lib/profile-model':{empty:{}},'@/lib/artist-preferences':catalog});
 const owner=Buffer.from(await crypto.subtle.digest('SHA-256',new TextEncoder().encode('test-owner'))).toString('hex');
@@ -16,7 +17,8 @@ sql.prepare('INSERT INTO profiles VALUES (?,?,?,?,?,?,?,?)').run(owner,'Test','A
 async function request(method='GET',body,subject='test-owner',path='preferences',origin='https://test.example'){return api[method](new Request('https://test.example/api/profile/'+path,{method,headers:{...(subject?{'oai-authenticated-user-id':subject}:{}),origin,'Content-Type':'application/json'},...(body?{body:JSON.stringify(body)}:{})}));}
 assert.equal((await request('GET',null,'')).status,401);
 assert.deepEqual((await (await request()).json()).preferences,catalog.blankPreferences);
-const draft={adultConfirmed:false,answers:{hugging:{choice:'discuss_first',notes:'Confirm choreography.'}}};
+function onlyMe(){return 'only_me';}
+const draft={visibility: onlyMe(),adultConfirmed:false,answers:{hugging:{choice:'discuss_first',notes:'Confirm choreography.'}}};
 assert.equal((await request('PUT',{preferences:draft,version:null},'test-owner','preferences','https://other.example')).status,403);
 let result=await request('PUT',{preferences:draft,version:null});assert.equal(result.status,200);assert.equal((await result.json()).version,1);
 assert.deepEqual((await (await request()).json()).preferences,draft);
@@ -29,5 +31,24 @@ const publicResult=await (await request('GET',null,'another-owner','artists')).j
 assert.equal((await request('PUT',{preferences:catalog.blankPreferences,version:1})).status,200);
 assert.deepEqual((await (await request()).json()).preferences,catalog.blankPreferences);
 assert.equal(catalog.preferenceOptions.length,21);
+// Visibility authorization is enforced on the server, including direct URL access.
+const target='preferences/'+owner;
+assert.equal((await request('GET',null,'another-owner',target)).status,404);
+assert.equal((await request('PUT',{preferences:{...draft,visibility:'everyone'},version:2})).status,200);
+let shared=await (await request('GET',null,'another-owner',target)).json();
+assert.equal(shared.preferences.answers.hugging.choice,'discuss_first');
+assert.equal('adultConfirmed' in shared.preferences,false);
+assert.equal((await request('PUT',{preferences:{...draft,visibility:'managers'},version:3})).status,200);
+assert.equal((await request('GET',null,'another-owner',target)).status,404);
+const manager=Buffer.from(await crypto.subtle.digest('SHA-256',new TextEncoder().encode('another-owner'))).toString('hex');
+sql.prepare('INSERT INTO verified_managers VALUES (?,?,?)').run(manager,'now',1);
+assert.equal((await request('GET',null,'another-owner',target)).status,200);
+sql.prepare('UPDATE verified_managers SET is_active=0 WHERE account_id=?').run(manager);
+assert.equal((await request('GET',null,'another-owner',target)).status,404);
+assert.equal((await request('PUT',{preferences:{...draft,visibility:'only_me'},version:4})).status,200);
+assert.equal((await request('GET',null,'another-owner',target)).status,404);
+assert.equal((await request('PUT',{preferences:{...draft,visibility:'invalid'},version:5})).status,400);
+assert.equal((await request('PUT',{preferences:draft,version:5},'another-owner',target)).status,404);
+console.log('Passed visibility: only me, everyone, verified managers, revocation, invalid audience and blocked cross-owner writes.');
 console.log('Passed: durable read/write, owner isolation, no public leakage, authentication, origin, validation, adult gating, conflicts and clearing.');
 sql.close();
