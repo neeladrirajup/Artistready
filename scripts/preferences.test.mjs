@@ -1,0 +1,33 @@
+import {readFileSync} from 'node:fs';
+import {createRequire} from 'node:module';
+import {DatabaseSync} from 'node:sqlite';
+import assert from 'node:assert/strict';
+const require=createRequire(import.meta.url),ts=require('typescript');
+function load(file,mocks={}){const exports={};const code=ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;new Function('require','exports',code)(name=>name in mocks?mocks[name]:require(name),exports);return exports;}
+const catalog=load('src/lib/artist-preferences.ts');
+const sql=new DatabaseSync(':memory:');
+sql.exec(readFileSync('drizzle/0000_empty_wild_child.sql','utf8'));
+sql.exec(readFileSync('drizzle/0001_noisy_daredevil.sql','utf8'));
+const db={prepare(query){let params=[];return {bind(...args){params=args;return this;},async first(){return sql.prepare(query).get(...params)||null;},async all(){return {results:sql.prepare(query).all(...params)};},async run(){return {meta:{changes:Number(sql.prepare(query).run(...params).changes)}};}};}};
+const api=load('src/app/api/profile/[[...path]]/route.ts',{'cloudflare:workers':{env:{DB:db,BUCKET:{}}},'../../../../../lib/profile-runtime':{getProfileRuntime:()=>null},'@/lib/profile-validation':{profileSchema:{}},'@/lib/profile-model':{empty:{}},'@/lib/artist-preferences':catalog});
+const owner=Buffer.from(await crypto.subtle.digest('SHA-256',new TextEncoder().encode('test-owner'))).toString('hex');
+sql.prepare('INSERT INTO profile_accounts VALUES (?,?)').run(owner,'now');
+sql.prepare('INSERT INTO profiles VALUES (?,?,?,?,?,?,?,?)').run(owner,'Test','Actor','Hyderabad','{}',1,'now','now');
+async function request(method='GET',body,subject='test-owner',path='preferences',origin='https://test.example'){return api[method](new Request('https://test.example/api/profile/'+path,{method,headers:{...(subject?{'oai-authenticated-user-id':subject}:{}),origin,'Content-Type':'application/json'},...(body?{body:JSON.stringify(body)}:{})}));}
+assert.equal((await request('GET',null,'')).status,401);
+assert.deepEqual((await (await request()).json()).preferences,catalog.blankPreferences);
+const draft={adultConfirmed:false,answers:{hugging:{choice:'discuss_first',notes:'Confirm choreography.'}}};
+assert.equal((await request('PUT',{preferences:draft,version:null},'test-owner','preferences','https://other.example')).status,403);
+let result=await request('PUT',{preferences:draft,version:null});assert.equal(result.status,200);assert.equal((await result.json()).version,1);
+assert.deepEqual((await (await request()).json()).preferences,draft);
+assert.deepEqual((await (await request('GET',null,'another-owner')).json()).preferences,catalog.blankPreferences);
+assert.equal((await request('PUT',{preferences:draft,version:null})).status,409);
+assert.equal((await request('PUT',{preferences:{adultConfirmed:false,answers:{lip_kissing:{choice:'okay',notes:''}}},version:1})).status,400);
+assert.equal((await request('PUT',{preferences:{adultConfirmed:true,answers:{unknown:{choice:'okay',notes:''}}},version:1})).status,400);
+assert.equal((await request('PUT',{preferences:{adultConfirmed:true,answers:{hugging:{choice:'okay',notes:'a'.repeat(1001)}}},version:1})).status,400);
+const publicResult=await (await request('GET',null,'another-owner','artists')).json();assert.equal(JSON.stringify(publicResult).includes('Confirm choreography'),false);
+assert.equal((await request('PUT',{preferences:catalog.blankPreferences,version:1})).status,200);
+assert.deepEqual((await (await request()).json()).preferences,catalog.blankPreferences);
+assert.equal(catalog.preferenceOptions.length,21);
+console.log('Passed: durable read/write, owner isolation, no public leakage, authentication, origin, validation, adult gating, conflicts and clearing.');
+sql.close();

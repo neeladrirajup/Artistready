@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import './artist-preferences.css';
 import './profile-photos.css';
 import './profile-measurements.css';
 import './casting-profile.css';

@@ -2,6 +2,7 @@ import { env as workerEnv } from 'cloudflare:workers';
 import { getProfileRuntime } from '../../../../../lib/profile-runtime';
 import { profileSchema } from '@/lib/profile-validation';
 import { empty, type Draft } from '@/lib/profile-model';
+import { preferencesSchema, blankPreferences } from '@/lib/artist-preferences';
 export const dynamic='force-dynamic';
 const json=(value:unknown,status=200)=>Response.json(value,{status,headers:{'Cache-Control':'no-store'}});
 const hash=async(s:string|ArrayBuffer)=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',typeof s==='string'?new TextEncoder().encode(s):s))).map(b=>b.toString(16).padStart(2,'0')).join('');
@@ -30,6 +31,26 @@ async function handle(request:Request){
    const row=await db.prepare('SELECT id,document,version,updated_at FROM profiles WHERE id=?').bind(owner).first<Row>();
    const media=await db.prepare('SELECT * FROM profile_media WHERE owner_id=? ORDER BY created_at,id').bind(owner).all<MediaRow>();
    return json({id:owner,draft:row?JSON.parse(row.document):null,version:row?.version??null,updatedAt:row?.updated_at??null,media:media.results.map(viewMedia)});
+  }
+  // No artist ID parameter: preferences can only be accessed as the signed-in owner.
+  if(path.length===1&&path[0]==='preferences'){
+   if(request.method==='GET'){
+    const row=await db.prepare('SELECT document,version,updated_at FROM artist_preferences WHERE artist_id=?').bind(owner).first<Row>();
+    return json({preferences:row?JSON.parse(row.document):blankPreferences,version:row?.version??null,updatedAt:row?.updated_at??null});
+   }
+   if(request.method==='PUT'){
+    const body=JSON.parse(new TextDecoder().decode(await boundedBody(request,50_000)));
+    const parsed=preferencesSchema.safeParse(body.preferences);
+    if(!parsed.success)return json({error:parsed.error.issues[0]?.message||'Check your preferences.'},400);
+    if(body.version!==null&&(!Number.isInteger(body.version)||body.version<1))return json({error:'Reload preferences before saving.'},400);
+    if(!await db.prepare('SELECT id FROM profiles WHERE id=?').bind(owner).first())return json({error:'Save your artist profile first.'},400);
+    const now=new Date().toISOString(),doc=JSON.stringify(parsed.data);
+    const result=body.version===null
+     ?await db.prepare('INSERT OR IGNORE INTO artist_preferences(artist_id,document,version,created_at,updated_at) VALUES(?,?,1,?,?)').bind(owner,doc,now,now).run()
+     :await db.prepare('UPDATE artist_preferences SET document=?,version=version+1,updated_at=? WHERE artist_id=? AND version=?').bind(doc,now,owner,body.version).run();
+    if(!result.meta.changes)return json({error:'Preferences changed in another tab. Close and reload the page before editing again.'},409);
+    return json({preferences:parsed.data,version:body.version===null?1:body.version+1,updatedAt:now});
+   }
   }
   if(request.method==='GET'&&path[0]==='artists'){
    const rows=await db.prepare('SELECT id,document,version,updated_at FROM profiles ORDER BY updated_at DESC LIMIT 200').all<Row>();

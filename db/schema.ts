@@ -17,3 +17,10 @@ export const media = sqliteTable('profile_media', {
  name: text('name').notNull(), mime: text('mime').notNull(), size: integer('size').notNull(),
  createdAt: text('created_at').notNull(),
 }, table=>[uniqueIndex('profile_media_owner_id').on(table.ownerId,table.id)]);
+
+// Private answers are deliberately separate from public profile documents.
+export const artistPreferences = sqliteTable('artist_preferences', {
+ artistId: text('artist_id').primaryKey().references(()=>profiles.id,{onDelete:'cascade'}),
+ document: text('document').notNull(), version: integer('version').notNull().default(1),
+ createdAt: text('created_at').notNull(), updatedAt: text('updated_at').notNull(),
+});

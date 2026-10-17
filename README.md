@@ -58,3 +58,13 @@ Language editing and onboarding share the 40-entry catalog snapshot in src/lib/l
 
 Internal navigation uses browser anchor links. This avoids the deployed runtime's client-router prefetch/navigation failure. My profile always opens /artists/my-profile, even before account data finishes loading.
 
+
+Artist preferences use a separate private D1 table, never public profile JSON.
+The catalog matches PostgreSQL migration 005 (21 options, four choices).
+Only authenticated owners can read/write /api/profile/preferences; there is no
+casting-viewer access yet. Saves use version checks and preserve other sections.
+Adult-only fields require the artist's explicit 18+ confirmation (self-attestation,
+not identity verification). No defaults or answers are inferred from playing age.
+Run node scripts/preferences.test.mjs to verify persistence, ownership, privacy,
+origin checks, validation, conflict handling and clear-answer behavior in SQLite.
+The local PostgreSQL catalog remains separate from hosted D1; there is no live sync.
