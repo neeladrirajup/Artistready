@@ -1,0 +1,202 @@
+[
+  {
+    "id": 21,
+    "name": "Telugu",
+    "sortOrder": 1
+  },
+  {
+    "id": 20,
+    "name": "Tamil",
+    "sortOrder": 2
+  },
+  {
+    "id": 7,
+    "name": "Kannada",
+    "sortOrder": 3
+  },
+  {
+    "id": 11,
+    "name": "Malayalam",
+    "sortOrder": 4
+  },
+  {
+    "id": 6,
+    "name": "Hindi",
+    "sortOrder": 5
+  },
+  {
+    "id": 23,
+    "name": "English",
+    "sortOrder": 6
+  },
+  {
+    "id": 24,
+    "name": "Arabic",
+    "sortOrder": 100
+  },
+  {
+    "id": 1,
+    "name": "Assamese",
+    "sortOrder": 100
+  },
+  {
+    "id": 2,
+    "name": "Bengali",
+    "sortOrder": 100
+  },
+  {
+    "id": 3,
+    "name": "Bodo",
+    "sortOrder": 100
+  },
+  {
+    "id": 32,
+    "name": "Cantonese",
+    "sortOrder": 100
+  },
+  {
+    "id": 4,
+    "name": "Dogri",
+    "sortOrder": 100
+  },
+  {
+    "id": 25,
+    "name": "French",
+    "sortOrder": 100
+  },
+  {
+    "id": 26,
+    "name": "German",
+    "sortOrder": 100
+  },
+  {
+    "id": 5,
+    "name": "Gujarati",
+    "sortOrder": 100
+  },
+  {
+    "id": 37,
+    "name": "Indonesian",
+    "sortOrder": 100
+  },
+  {
+    "id": 28,
+    "name": "Italian",
+    "sortOrder": 100
+  },
+  {
+    "id": 33,
+    "name": "Japanese",
+    "sortOrder": 100
+  },
+  {
+    "id": 8,
+    "name": "Kashmiri",
+    "sortOrder": 100
+  },
+  {
+    "id": 9,
+    "name": "Konkani",
+    "sortOrder": 100
+  },
+  {
+    "id": 34,
+    "name": "Korean",
+    "sortOrder": 100
+  },
+  {
+    "id": 10,
+    "name": "Maithili",
+    "sortOrder": 100
+  },
+  {
+    "id": 38,
+    "name": "Malay",
+    "sortOrder": 100
+  },
+  {
+    "id": 31,
+    "name": "Mandarin",
+    "sortOrder": 100
+  },
+  {
+    "id": 12,
+    "name": "Manipuri",
+    "sortOrder": 100
+  },
+  {
+    "id": 13,
+    "name": "Marathi",
+    "sortOrder": 100
+  },
+  {
+    "id": 14,
+    "name": "Nepali",
+    "sortOrder": 100
+  },
+  {
+    "id": 15,
+    "name": "Odia",
+    "sortOrder": 100
+  },
+  {
+    "id": 40,
+    "name": "Persian",
+    "sortOrder": 100
+  },
+  {
+    "id": 29,
+    "name": "Portuguese",
+    "sortOrder": 100
+  },
+  {
+    "id": 16,
+    "name": "Punjabi",
+    "sortOrder": 100
+  },
+  {
+    "id": 30,
+    "name": "Russian",
+    "sortOrder": 100
+  },
+  {
+    "id": 17,
+    "name": "Sanskrit",
+    "sortOrder": 100
+  },
+  {
+    "id": 18,
+    "name": "Santali",
+    "sortOrder": 100
+  },
+  {
+    "id": 19,
+    "name": "Sindhi",
+    "sortOrder": 100
+  },
+  {
+    "id": 27,
+    "name": "Spanish",
+    "sortOrder": 100
+  },
+  {
+    "id": 35,
+    "name": "Thai",
+    "sortOrder": 100
+  },
+  {
+    "id": 39,
+    "name": "Turkish",
+    "sortOrder": 100
+  },
+  {
+    "id": 22,
+    "name": "Urdu",
+    "sortOrder": 100
+  },
+  {
+    "id": 36,
+    "name": "Vietnamese",
+    "sortOrder": 100
+  }
+]
