@@ -1,3 +1,4 @@
+import { callSheetSchema } from './call-sheet';
 import { z } from 'zod';
 import { empty } from './profile-model';
 const text=z.string().max(2000), tag=z.string().max(120);
@@ -5,7 +6,7 @@ const url=z.string().max(2048).refine(s=>!s||/^https?:\/\//i.test(s),'Use an htt
 const milestone=z.object({id:tag,title:text,organisation:text,year:tag,notes:text});
 const fields:Record<string,z.ZodTypeAny>={};
 for(const [key,value] of Object.entries(empty)) fields[key]=typeof value==='boolean'?z.boolean():typeof value==='string'?text:z.array(tag).max(100);
-export const profileSchema=z.object({ ...fields,
+export const profileSchema=z.object({ ...fields,callSheet:callSheetSchema,
  name:z.string().trim().min(1).max(80),role:tag.min(1),city:tag.min(1),
  photo:z.string().max(1_500_000).refine(s=>!s||/^data:image\/(jpeg|png|webp);base64,/.test(s)),
  skillCategories:z.record(tag,tag),clothing:z.record(tag,tag),

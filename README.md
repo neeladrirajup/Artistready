@@ -80,3 +80,14 @@ seeded and no client-accessible role assignment endpoint exists. A profile role
 or claimed occupation never grants manager access. Managers-only remains private
 until an administrator approves manager accounts. Notes follow the same audience
 as answers. Tests cover all audiences, revoked managers and cross-owner writes.
+
+Call Sheet & Shoot Schedule is a separately editable section in profile Overview
+and Details. The existing profile document stores callSheet (shootingStatus,
+optional project/date range, notes and up to 50 availability ranges). It uses the
+existing authenticated/versioned profile API and D1 record; no new SQL table or
+migration is needed. Existing records default to an unspecified status and no
+dates. Ranges support available, tentative, booked and unavailable; invalid dates,
+reversed ranges, overlaps and available/current-shoot conflicts are rejected.
+Project details are optional and visible with the artist profile. Dates are
+calendar dates, not UTC timestamps. Schedule entries never create bookings.
+Run node scripts/call-sheet.test.mjs for validation and API persistence checks.
