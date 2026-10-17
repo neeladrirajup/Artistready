@@ -96,3 +96,8 @@ Created profiles include a Booking & availability card on Overview and Details, 
 
 Compared the publicly visible structure of https://www.reelon.com/subhra-smita-priyadarshini01. Added multiple creative roles, editable skill categories (Technical, Soft Skills, Artistic Skills, Others), up to three pinned photo/video/link highlights, and project portfolio search/type filters with real local counts. Roles, skill categories and pins are also available during setup. Additional roles are searchable in discovery. No third-party artist identity, contacts, images, followers or connections were imported; real networking remains unconnected.
 
+
+## Local database
+
+A working SQLite development database is included through the database schema and setup tools. Run npm run db:setup with Node.js 24, then npm run db:status to inspect the tables. See database/README.md for the schema, team setup, privacy boundaries and live integration steps. The current static website still uses browser-local storage; this database is not yet connected to the UI. The generated data/artist-ready.sqlite file and its journals are excluded from Git, source archives and publication.
+

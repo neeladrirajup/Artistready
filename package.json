@@ -2,7 +2,27 @@
   "name": "artist-ready",
   "version": "0.1.0",
   "private": true,
-  "scripts": { "dev": "next dev --hostname 127.0.0.1", "build": "next build", "start": "next start --hostname 127.0.0.1", "typecheck": "tsc --noEmit" },
-  "dependencies": { "next": "^16.0.0", "react": "^19.0.0", "react-dom": "^19.0.0", "lucide-react": "^0.468.0" },
-  "devDependencies": { "typescript": "^5.7.0", "@types/node": "^22.0.0", "@types/react": "^19.0.0", "@types/react-dom": "^19.0.0" }
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "db:setup": "node scripts/database.mjs setup",
+    "db:migrate": "node scripts/database.mjs migrate",
+    "db:seed": "node scripts/database.mjs seed",
+    "db:status": "node scripts/database.mjs status",
+    "db:test": "node --test database/database.test.mjs"
+  },
+  "dependencies": {
+    "next": "^16.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "lucide-react": "^0.468.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0"
+  }
 }
