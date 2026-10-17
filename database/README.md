@@ -1,3 +1,7 @@
+## Production update
+
+The live app is now connected to hosted D1 and R2. This directory describes the earlier standalone local SQLite prototype. See [Hosted profile storage](../db/README.md) for the application database and migration instructions.
+
 # Artistready database
 
 A working **local SQLite database** for development. Requires Node.js 24; uses the built-in `node:sqlite` module without an extra database service or dependency.
@@ -60,3 +64,4 @@ try {
 ```
 
 Keep this module on the server or in development scripts. Never import it into a client component.
+
