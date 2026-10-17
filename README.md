@@ -47,3 +47,6 @@ For production-runtime API tests, run the built Worker with `npm start -- --port
 ## Publishing
 
 The tracked `.openai/hosting.json` retains the existing Site ID and declares D1/R2 bindings. Sites provisions these resources and applies committed Drizzle migrations before deploying the Worker. Build and package with the Sites workflow. No passwords, account records, actual uploaded files, SQLite files or emulator state belong in source archives.
+
+The skills editor includes the 64-entry catalog snapshot in src/lib/skills-catalog.json, exported from the local PostgreSQL skills catalog. It supports search, category filters, selected-skill browsing and custom entries. New catalog selections receive their default category, which the artist can change. This published catalog snapshot does not connect the hosted server to laptop PostgreSQL.
+

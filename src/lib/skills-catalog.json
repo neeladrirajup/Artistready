@@ -1,0 +1,322 @@
+[
+  {
+    "id": 1,
+    "name": "Acting",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 12,
+    "name": "Action",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 23,
+    "name": "Bharatanatyam",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 28,
+    "name": "Choreography",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 22,
+    "name": "Classical dance",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 29,
+    "name": "Classical singing",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 14,
+    "name": "Comedy",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 26,
+    "name": "Contemporary dance",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 49,
+    "name": "Costume design",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 2,
+    "name": "Dance",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 35,
+    "name": "Dialogue writing",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 13,
+    "name": "Drama",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 33,
+    "name": "Drums",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 19,
+    "name": "Dubbing",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 31,
+    "name": "Guitar",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 27,
+    "name": "Hip-hop dance",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 16,
+    "name": "Improvisation",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 25,
+    "name": "Kathak",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 24,
+    "name": "Kuchipudi",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 20,
+    "name": "Mime",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 21,
+    "name": "Mimicry",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 32,
+    "name": "Piano",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 30,
+    "name": "Playback singing",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 50,
+    "name": "Production design",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 34,
+    "name": "Screenwriting",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 3,
+    "name": "Singing",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 36,
+    "name": "Storytelling",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 15,
+    "name": "Theatre",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 18,
+    "name": "Voice-over",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 17,
+    "name": "Voice acting",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 4,
+    "name": "Writing",
+    "category": "Artistic Skills"
+  },
+  {
+    "id": 61,
+    "name": "Adaptability",
+    "category": "Soft Skills"
+  },
+  {
+    "id": 62,
+    "name": "Collaboration",
+    "category": "Soft Skills"
+  },
+  {
+    "id": 57,
+    "name": "Communication",
+    "category": "Soft Skills"
+  },
+  {
+    "id": 59,
+    "name": "Leadership",
+    "category": "Soft Skills"
+  },
+  {
+    "id": 63,
+    "name": "Problem solving",
+    "category": "Soft Skills"
+  },
+  {
+    "id": 64,
+    "name": "Public speaking",
+    "category": "Soft Skills"
+  },
+  {
+    "id": 58,
+    "name": "Teamwork",
+    "category": "Soft Skills"
+  },
+  {
+    "id": 60,
+    "name": "Time management",
+    "category": "Soft Skills"
+  },
+  {
+    "id": 46,
+    "name": "Animation",
+    "category": "Technical"
+  },
+  {
+    "id": 43,
+    "name": "Camera operation",
+    "category": "Technical"
+  },
+  {
+    "id": 7,
+    "name": "Cinematography",
+    "category": "Technical"
+  },
+  {
+    "id": 39,
+    "name": "Color grading",
+    "category": "Technical"
+  },
+  {
+    "id": 55,
+    "name": "Cycling",
+    "category": "Technical"
+  },
+  {
+    "id": 37,
+    "name": "Directing",
+    "category": "Technical"
+  },
+  {
+    "id": 9,
+    "name": "Driving",
+    "category": "Technical"
+  },
+  {
+    "id": 44,
+    "name": "Drone operation",
+    "category": "Technical"
+  },
+  {
+    "id": 5,
+    "name": "Editing",
+    "category": "Technical"
+  },
+  {
+    "id": 38,
+    "name": "Film editing",
+    "category": "Technical"
+  },
+  {
+    "id": 48,
+    "name": "Hair styling",
+    "category": "Technical"
+  },
+  {
+    "id": 53,
+    "name": "Horse riding",
+    "category": "Technical"
+  },
+  {
+    "id": 11,
+    "name": "Karate",
+    "category": "Technical"
+  },
+  {
+    "id": 42,
+    "name": "Lighting",
+    "category": "Technical"
+  },
+  {
+    "id": 47,
+    "name": "Makeup",
+    "category": "Technical"
+  },
+  {
+    "id": 10,
+    "name": "Martial arts",
+    "category": "Technical"
+  },
+  {
+    "id": 54,
+    "name": "Motorcycle riding",
+    "category": "Technical"
+  },
+  {
+    "id": 6,
+    "name": "Photography",
+    "category": "Technical"
+  },
+  {
+    "id": 41,
+    "name": "Sound design",
+    "category": "Technical"
+  },
+  {
+    "id": 40,
+    "name": "Sound recording",
+    "category": "Technical"
+  },
+  {
+    "id": 52,
+    "name": "Stage combat",
+    "category": "Technical"
+  },
+  {
+    "id": 51,
+    "name": "Stunts",
+    "category": "Technical"
+  },
+  {
+    "id": 8,
+    "name": "Swimming",
+    "category": "Technical"
+  },
+  {
+    "id": 45,
+    "name": "VFX",
+    "category": "Technical"
+  },
+  {
+    "id": 56,
+    "name": "Yoga",
+    "category": "Technical"
+  }
+]
