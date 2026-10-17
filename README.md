@@ -55,3 +55,6 @@ The skills editor includes the 64-entry catalog snapshot in src/lib/skills-catal
 
 Language editing and onboarding share the 40-entry catalog snapshot in src/lib/languages-catalog.json, with South Indian languages first and searchable options. Existing selections remain supported. This catalog snapshot is exported from local PostgreSQL; the live profile API still uses D1.
 
+
+Internal navigation uses browser anchor links. This avoids the deployed runtime's client-router prefetch/navigation failure. My profile always opens /artists/my-profile, even before account data finishes loading.
+
