@@ -97,3 +97,8 @@ one section with one editor. The booking save whitelist includes callSheet,
 so booking details and schedule changes save together with the existing version
 check. The separate schedule heading and edit action have been removed. Existing
 stored fields and profile data require no migration.
+
+Modern studio typography: Outfit for the wordmark and headings, Inter for body
+text, profile details, forms and controls. Shared --heading/--sans tokens apply
+across all pages; --serif remains an alias for --heading for existing components.
+Google Fonts loads weights 400/500/600/700 with display=swap and Arial fallbacks.
