@@ -91,3 +91,9 @@ reversed ranges, overlaps and available/current-shoot conflicts are rejected.
 Project details are optional and visible with the artist profile. Dates are
 calendar dates, not UTC timestamps. Schedule entries never create bookings.
 Run node scripts/call-sheet.test.mjs for validation and API persistence checks.
+
+Booking & Availability now includes the current shoot and call sheet dates in
+one section with one editor. The booking save whitelist includes callSheet,
+so booking details and schedule changes save together with the existing version
+check. The separate schedule heading and edit action have been removed. Existing
+stored fields and profile data require no migration.
