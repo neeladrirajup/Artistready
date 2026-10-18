@@ -23,3 +23,5 @@
 .registered-profile-sidebar .call-sheet-section>summary{font-family:var(--heading);font-size:18px;font-weight:600;line-height:1.5;cursor:pointer;list-style:revert}.registered-profile-sidebar .call-sheet-section>summary small{display:block;color:var(--muted);font-family:var(--sans);font-size:11px;font-weight:400;margin-top:9px}.cinematic .created-profile .created-content>section{background:linear-gradient(125deg,#33372b55,#111611);border-color:#3f473c}
 
 @media(min-width:651px){.created-profile .registered-profile-sidebar:has(.call-sheet-section[open]){position:static}}
+
+.created-hero-about{margin:18px 0 22px}.created-hero-about .casting-bio{white-space:pre-wrap;overflow-wrap:anywhere;margin:0;line-height:1.8}.created-hero-about .gold-link{margin-top:10px;font-size:12px;display:inline-flex;align-items:center;gap:7px}.created-hero-about .casting-bio:empty{display:none}
