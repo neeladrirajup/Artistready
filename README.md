@@ -109,3 +109,11 @@ hides editor controls, database save status and import actions; edit callbacks
 and editor mounting are disabled. Back to editing returns to the owner page.
 General-viewer preview omits Only me / Managers only preferences; normal server
 visibility authorization remains unchanged. Preview is not a public sharing link.
+
+Saved artist profiles now use the sample profile's content-and-sidebar structure:
+one wide portfolio column plus a desktop sticky Booking & Availability / Share
+this profile sidebar. Long sidebars scroll within the viewport; mobile stacks
+cards beneath the main portfolio. The complete saved call sheet remains in the
+booking card. Sharing uses /artists/<account hash>, never /artists/my-profile,
+so another signed-in viewer sees the intended artist. Copy-link includes manual
+fallback and device sharing when available. Site audience/privacy is unchanged.
