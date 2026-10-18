@@ -112,7 +112,7 @@ visibility authorization remains unchanged. Preview is not a public sharing link
 
 Saved artist profiles now use the sample profile's content-and-sidebar structure:
 one wide portfolio column plus a desktop sticky Booking & Availability / Share
-this profile sidebar. Long sidebars scroll within the viewport; mobile stacks
+this profile sidebar. Sidebars use normal page scrolling with no internal scrollbar; expanding the schedule releases sticky positioning so every date stays reachable. Mobile stacks
 cards beneath the main portfolio. The complete saved call sheet remains in the
 booking card. Sharing uses /artists/<account hash>, never /artists/my-profile,
 so another signed-in viewer sees the intended artist. Copy-link includes manual
