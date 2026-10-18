@@ -102,3 +102,10 @@ Unified typography: Outfit for the wordmark, headings, body
 text, profile details, forms and controls. Shared --heading/--sans tokens apply
 across all pages; --serif remains an alias for --heading for existing components.
 Google Fonts loads variable weights 400–700 with display=swap and Arial fallbacks.
+
+The owner profile includes Preview -> /artists/my-profile?preview=1. Server page
+parameters select a read-only presentation using the same saved data. Preview
+hides editor controls, database save status and import actions; edit callbacks
+and editor mounting are disabled. Back to editing returns to the owner page.
+General-viewer preview omits Only me / Managers only preferences; normal server
+visibility authorization remains unchanged. Preview is not a public sharing link.

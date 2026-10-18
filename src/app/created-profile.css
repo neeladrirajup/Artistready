@@ -6,3 +6,5 @@
 
 .read-only-profile .created-portrait-editor button,.read-only-profile button.gold-link,.read-only-profile .casting-primary-actions button{display:none}
 
+
+.read-only-profile .created-empty button,.read-only-profile .created-section-empty button{display:none}
