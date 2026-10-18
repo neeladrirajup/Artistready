@@ -117,3 +117,11 @@ cards beneath the main portfolio. The complete saved call sheet remains in the
 booking card. Sharing uses /artists/<account hash>, never /artists/my-profile,
 so another signed-in viewer sees the intended artist. Copy-link includes manual
 fallback and device sharing when available. Site audience/privacy is unchanged.
+
+Measurements include optional bodyBuild and bodyBuildDescription fields in the
+saved profile document (D1); existing profiles default to unspecified. Both male
+and female measurement fits offer neutral build descriptions; female/neutral also
+offer Curvy. Artists can self-describe or decline disclosure. Registration and
+section editing share the catalog. The saved fit is displayed with Body Build.
+The laptop PostgreSQL snapshot is separate; these fields use existing document
+storage without adding a relational measurements table or live synchronization.
