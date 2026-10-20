@@ -13,4 +13,5 @@ dist/
 .wrangler/
 .vinext/
 .sites-runtime/
+.migration-private/
 

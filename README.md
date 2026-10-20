@@ -48,6 +48,8 @@ For production-runtime API tests, run the built Worker with `npm start -- --port
 
 The tracked `.openai/hosting.json` retains the existing Site ID and declares D1/R2 bindings. Sites provisions these resources and applies committed Drizzle migrations before deploying the Worker. Build and package with the Sites workflow. No passwords, account records, actual uploaded files, SQLite files or emulator state belong in source archives.
 
+For a separate deployment in the owner's Cloudflare account, see [Cloudflare deployment](CLOUDFLARE-DEPLOYMENT.md). It uses Cloudflare Access identity and its own D1/R2 resources.
+
 The skills editor includes the 64-entry catalog snapshot in src/lib/skills-catalog.json, exported from the local PostgreSQL skills catalog. It supports search, category filters, selected-skill browsing. The skills window uses catalog selections without a custom skill text box. New catalog selections receive their default category automatically; the selection window does not show per-skill category editors. This published catalog snapshot does not connect the hosted server to laptop PostgreSQL.
 
 

@@ -13,9 +13,12 @@ const { d1, r2 } = hostingConfig;
 // macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 const managedLinux = readExecutionProfile() === "managed-linux";
+const independentCloudflare = process.env.ARTISTREADY_CLOUDFLARE === "1";
 
 const localBindingConfig = {
-  main: "./build/sites-worker.ts",
+  main: independentCloudflare
+    ? "./build/cloudflare-worker.ts"
+    : "./build/sites-worker.ts",
   compatibility_flags: ["nodejs_compat"],
   d1_databases: d1
     ? [

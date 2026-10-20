@@ -1,0 +1,6 @@
+{
+  "workerName": "artistready",
+  "databaseName": "artistready-prod",
+  "databaseId": "2e68fef4-b2f2-4cdc-8a7f-677a03a8e7c3",
+  "bucketName": "artistready-media"
+}
