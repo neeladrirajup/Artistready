@@ -26,6 +26,11 @@ craft, gender, playing age, availability, language, skill, and text search. It
 returns 50 at a time; the list loads additional matches on request. The full
 JSON document remains the source for profile display and editing. Sample artists
 are still filtered locally because they are illustrative records, not D1 rows.
+Migration `0004_absent_abomination.sql` adds `artist_measurements`. It stores
+height, weight, chest/bust, waist, hip, body build and measurement fit as typed
+values, backfills existing profiles, and follows profile edits through triggers.
+The search API accepts a body-build choice and optional height bounds; the
+filter panel offers the body-build choice. Unfilled measurements remain null.
 
 ## Import and save behavior
 

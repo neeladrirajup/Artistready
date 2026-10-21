@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer, uniqueIndex, index, primaryKey } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, real, uniqueIndex, index, primaryKey } from 'drizzle-orm/sqlite-core';
 
 // Complete profile documents preserve every portfolio field, including future
 // optional fields. Ownership and media references remain relational.
@@ -49,3 +49,11 @@ export const artistSearchLanguages = sqliteTable('artist_search_languages', {
  artistId: text('artist_id').notNull().references(()=>profiles.id,{onDelete:'cascade'}),
  value: text('value').notNull(),
 }, table=>[primaryKey({columns:[table.artistId,table.value]}),index('artist_search_languages_value').on(table.value,table.artistId)]);
+
+export const artistMeasurements = sqliteTable('artist_measurements', {
+ artistId: text('artist_id').primaryKey().references(()=>profiles.id,{onDelete:'cascade'}),
+ measurementFit: text('measurement_fit').notNull(), bodyBuild: text('body_build').notNull(),
+ heightInches: integer('height_inches'), weightKg: real('weight_kg'),
+ chestIn: real('chest_in'), bustIn: real('bust_in'),
+ waistIn: real('waist_in'), hipIn: real('hip_in'),
+}, table=>[index('artist_measurements_build_fit').on(table.bodyBuild,table.measurementFit),index('artist_measurements_height').on(table.heightInches)]);

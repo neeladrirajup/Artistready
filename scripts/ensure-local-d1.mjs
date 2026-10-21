@@ -21,6 +21,7 @@ export function ensureLocalD1() {
     { tables: ['artist_preferences'], file: '0001_noisy_daredevil.sql' },
     { tables: ['verified_managers'], file: '0002_quiet_pandemic.sql' },
     { tables: ['artist_search', 'artist_search_skills', 'artist_search_languages'], file: '0003_smooth_wallflower.sql' },
+    { tables: ['artist_measurements'], file: '0004_absent_abomination.sql' },
   ];
   try {
     db.exec('BEGIN IMMEDIATE');
