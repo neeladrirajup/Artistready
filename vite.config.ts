@@ -58,7 +58,7 @@ export default defineConfig(async ({ command }) => {
   return {
     server: {
       ...(localPostgres
-        ? { proxy: { "/api/local/body-types": "http://127.0.0.1:5174" } }
+        ? { proxy: { "/api/local/body-types": "http://127.0.0.1:5174", "/api/local/craft-roles": "http://127.0.0.1:5174" } }
         : {}),
       ...(managedLinux
         ? { host: "0.0.0.0", allowedHosts: ["terminal.local"] }

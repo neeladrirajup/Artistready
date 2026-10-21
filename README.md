@@ -34,6 +34,12 @@ editing will show “Choices loaded from local PostgreSQL.” This local develop
 connection covers the Body Type catalog; profile records and uploads still use
 the local D1/R2 emulator. The hosted site is unchanged.
 
+For craft-specific roles, apply migration 007 with
+`../postgresql-setup/apply-craft-roles.ps1` and use the same launcher. The role
+picker offers 102 choices across Actor, Actress, Director, Writer,
+Cinematographer and Other creative. Switching craft clears the prior craft's
+role selections.
+
 ```
 npm run typecheck
 npm run build
