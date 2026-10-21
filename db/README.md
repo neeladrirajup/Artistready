@@ -18,6 +18,15 @@ The eight illustrative artists remain clearly identified sample content in
 `src/lib/artists.ts`. Registered profiles are fetched from the database and added
 to the list. Site access remains controlled by the existing private Sites policy.
 
+Migration `0003_smooth_wallflower.sql` adds `artist_search` plus indexed skill and
+language link tables. Database triggers backfill existing profiles and refresh
+these search rows whenever a profile is inserted, edited, or deleted. The
+`/api/profile/search` endpoint filters registered artists in D1 by location,
+craft, gender, playing age, availability, language, skill, and text search. It
+returns 50 at a time; the list loads additional matches on request. The full
+JSON document remains the source for profile display and editing. Sample artists
+are still filtered locally because they are illustrative records, not D1 rows.
+
 ## Import and save behavior
 
 Existing browser data is offered through **Import profile & uploads to database**

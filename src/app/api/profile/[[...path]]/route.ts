@@ -63,6 +63,31 @@ async function handle(request:Request){
     return json({preferences:parsed.data,version:body.version===null?1:body.version+1,updatedAt:now});
    }
   }
+  if(request.method==='GET'&&path[0]==='search'){
+   const params=url.searchParams;
+   const where:string[]=['s.artist_id <> ?'];const values:(string|number)[]=[owner];
+   const city=params.get('city');if(city&&city!=='All locations'){where.push('s.city = ?');values.push(city);}
+   const category=params.get('category');if(category&&category!=='All'){where.push('s.category = ?');values.push(category);}
+   const roles=params.getAll('role').slice(0,20);if(roles.length){where.push(`s.category IN (${roles.map(()=>'?').join(',')})`);values.push(...roles);}
+   const gender=params.get('gender');if(gender&&gender!=='All'){where.push('s.gender = ?');values.push(gender);}
+   if(params.get('available')==='true')where.push('s.available = 1');
+   const minAge=Number(params.get('minAge')||18),maxAge=Number(params.get('maxAge')||60);
+   if(!Number.isInteger(minAge)||!Number.isInteger(maxAge)||minAge<18||maxAge>60||minAge>maxAge)return json({error:'Invalid age range.'},400);
+   if(minAge!==18||maxAge!==60){where.push('s.age_from IS NOT NULL AND s.age_from >= ?');values.push(minAge);if(maxAge!==60){where.push('s.age_from <= ?');values.push(maxAge);}}
+   const languages=params.getAll('language').slice(0,30);if(languages.length){where.push(`EXISTS (SELECT 1 FROM artist_search_languages l WHERE l.artist_id=s.artist_id AND l.value IN (${languages.map(()=>'?').join(',')}))`);values.push(...languages);}
+   const skills=[...new Set(params.getAll('skill'))].slice(0,30);for(const skill of skills){where.push('EXISTS (SELECT 1 FROM artist_search_skills k WHERE k.artist_id=s.artist_id AND k.value=?)');values.push(skill);}
+   const search=(params.get('q')||'').trim().toLowerCase().slice(0,100);
+   if(search){where.push("s.search_text LIKE ? ESCAPE '\\'");values.push('%'+search.replace(/[\\%_]/g,c=>'\\'+c)+'%');}
+   const condition=where.length?'WHERE '+where.join(' AND '):'';
+   const count=await db.prepare(`SELECT COUNT(*) AS n FROM artist_search s ${condition}`).bind(...values).first<{n:number}>();
+   if(params.get('countOnly')==='true')return json({total:count?.n??0});
+   const order=params.get('sort')==='Name A–Z'?'s.name COLLATE NOCASE ASC':params.get('sort')==='Experience'?'s.experience_years DESC, p.updated_at DESC':'p.updated_at DESC';
+   const limit=50,offset=Math.min(Math.max(Number(params.get('offset')||0)||0,0),10000);
+   const rows=await db.prepare(`SELECT p.id,p.document,p.version,p.updated_at FROM artist_search s JOIN profiles p ON p.id=s.artist_id ${condition} ORDER BY ${order} LIMIT ? OFFSET ?`).bind(...values,limit,offset).all<Row>();
+   const ids=rows.results.map(row=>row.id);
+   const media=ids.length?await db.prepare(`SELECT * FROM profile_media WHERE owner_id IN (${ids.map(()=>'?').join(',')}) ORDER BY created_at,id`).bind(...ids).all<MediaRow>():{results:[] as MediaRow[]};
+   return json({total:count?.n??0,artists:rows.results.map(row=>{const draft={...empty,...JSON.parse(row.document)} as Draft;const files=media.results.filter(m=>m.owner_id===row.id);const cover=files.find(m=>m.id===draft.coverId)||files.find(m=>m.kind==='photo');const image=cover?viewMedia(cover).url:draft.photo||'my-profile-placeholder';return {id:row.id,name:draft.name,role:draft.role,additionalRoles:draft.additionalRoles,category:draft.role==='Actor'?'Actors':draft.role==='Actress'?'Actresses':draft.role==='Director'?'Directors':draft.role==='Writer'?'Writers':'Crew',city:draft.city,image,tagline:draft.bio,languages:draft.languages,skills:draft.skills,available:draft.available,credits:draft.credits.length,experience:parseInt(draft.experience)||0,age:draft.ageFrom?Number(draft.ageFrom):null,gender:draft.gender,genres:draft.skills.slice(0,3)};})});
+  }
   if(request.method==='GET'&&path[0]==='artists'){
    const rows=await db.prepare('SELECT id,document,version,updated_at FROM profiles ORDER BY updated_at DESC LIMIT 200').all<Row>();
    const media=await db.prepare('SELECT * FROM profile_media WHERE owner_id IN (SELECT id FROM profiles ORDER BY updated_at DESC LIMIT 200) ORDER BY created_at,id').all<MediaRow>();
