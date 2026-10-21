@@ -14,6 +14,7 @@ const { d1, r2 } = hostingConfig;
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 const managedLinux = readExecutionProfile() === "managed-linux";
 const independentCloudflare = process.env.ARTISTREADY_CLOUDFLARE === "1";
+const localPostgres = process.env.ARTISTREADY_LOCAL_POSTGRES === "1";
 
 const localBindingConfig = {
   main: independentCloudflare
@@ -56,6 +57,9 @@ export default defineConfig(async ({ command }) => {
 
   return {
     server: {
+      ...(localPostgres
+        ? { proxy: { "/api/local/body-types": "http://127.0.0.1:5174" } }
+        : {}),
       ...(managedLinux
         ? { host: "0.0.0.0", allowedHosts: ["terminal.local"] }
         : {}),

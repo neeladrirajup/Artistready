@@ -27,6 +27,13 @@ npm run dev
 
 Open http://127.0.0.1:5173. The portable starter includes a local test sign-in at `/signin-with-chatgpt?return_to=/`; this simulator is absent from hosted production. Local D1/R2 data lives in ignored `.wrangler/state` and is independent of hosted data.
 
+To use the local PostgreSQL Body Type catalog, first apply migration 006 with
+`../postgresql-setup/apply-body-types.ps1`, then start the app with
+`./start-local-postgres.ps1`. The Body Type selector in registration and profile
+editing will show “Choices loaded from local PostgreSQL.” This local development
+connection covers the Body Type catalog; profile records and uploads still use
+the local D1/R2 emulator. The hosted site is unchanged.
+
 ```
 npm run typecheck
 npm run build
