@@ -1,0 +1,4 @@
+.profile-heading-icon{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;flex:none;border:1px solid #e8c47275;border-radius:10px;background:linear-gradient(145deg,#e8c4721c,#e8c47207);color:#efc977;box-shadow:0 0 19px #e8c47212}
+.profile-heading-icon-small{width:28px;height:28px;border-radius:8px}
+h2:has(>.profile-heading-icon),h3:has(>.profile-heading-icon){display:flex;align-items:center;gap:11px}
+@media(max-width:600px){.profile-heading-icon{width:30px;height:30px;border-radius:9px}.profile-heading-icon-small{width:25px;height:25px}}

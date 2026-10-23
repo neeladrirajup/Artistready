@@ -1,3 +1,4 @@
+import { ProfileSectionIcon } from './profile-section-icon';
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -33,7 +34,7 @@ export function ProfilePhotos({ artist, preview = false, curated = false, onView
   const photo = active === null ? null : photos[active];
 
   return <section className="profile-photos" aria-labelledby="photos-heading">
-    <div className="section-heading"><h2 id="photos-heading">{curated ? 'Selected photos' : 'Photos'}</h2><div className="photo-heading-actions"><span className="photo-count"><Images size={15} />{curated ? visiblePhotos.length + ' selected' : photos.length + (photos.length === 1 ? ' photo' : ' photos')}</span>{preview && photos.length > visiblePhotos.length && onViewAll && <button className="gold-link" onClick={onViewAll}>View all {photos.length}<ArrowRight size={16} /></button>}</div></div>
+    <div className="section-heading"><h2 id="photos-heading"><ProfileSectionIcon kind="photos"/>{curated ? 'Selected photos' : 'Photos'}</h2><div className="photo-heading-actions"><span className="photo-count"><Images size={15} />{curated ? visiblePhotos.length + ' selected' : photos.length + (photos.length === 1 ? ' photo' : ' photos')}</span>{preview && photos.length > visiblePhotos.length && onViewAll && <button className="gold-link" onClick={onViewAll}>View all {photos.length}<ArrowRight size={16} /></button>}</div></div>
     <div className={'profile-photo-grid' + (photos.length > 3 ? ' gallery-many' : '') + (!preview && photos.length > 6 ? ' gallery-expanded' : '')}>{visiblePhotos.map((item, index) => <button className="profile-photo-tile" key={item.image + '-' + item.number} onClick={() => setActive(index)} aria-label={'Open ' + artist.name + ' ' + item.label.toLowerCase() + ' photo ' + item.number}>
       <ArtistPhoto image={item.image} />
       <span className="photo-tile-shade" />

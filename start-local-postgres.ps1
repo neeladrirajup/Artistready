@@ -3,12 +3,14 @@ $credential=Import-Clixml -LiteralPath 'C:\Users\neela\AppData\Local\Artistready
 $priorPassword=$env:PGPASSWORD
 $priorLocal=$env:ARTISTREADY_LOCAL_POSTGRES
 $priorClient=$env:VITE_ARTISTREADY_LOCAL_POSTGRES
+$priorUrl=$env:ARTISTREADY_LOCAL_PG_URL
 $priorLocation=Get-Location
 $helper=$null
 try {
  $env:PGPASSWORD=$credential.GetNetworkCredential().Password
  $env:ARTISTREADY_LOCAL_POSTGRES='1'
  $env:VITE_ARTISTREADY_LOCAL_POSTGRES='1'
+ $env:ARTISTREADY_LOCAL_PG_URL='postgresql://postgres:'+ [Uri]::EscapeDataString($env:PGPASSWORD) +'@127.0.0.1:5432/artistready'
  $helper=Start-Process -FilePath 'C:\Program Files\nodejs\node.exe' -ArgumentList 'scripts/local-body-types-server.mjs' -WorkingDirectory $PSScriptRoot -WindowStyle Hidden -PassThru
  $ready=$false
  for($i=0;$i -lt 15;$i++){
@@ -24,6 +26,7 @@ try {
  $env:PGPASSWORD=$priorPassword
  $env:ARTISTREADY_LOCAL_POSTGRES=$priorLocal
  $env:VITE_ARTISTREADY_LOCAL_POSTGRES=$priorClient
+ $env:ARTISTREADY_LOCAL_PG_URL=$priorUrl
  Set-Location $priorLocation
  $credential=$null
 }

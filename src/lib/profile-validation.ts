@@ -7,7 +7,8 @@ const milestone=z.object({id:tag,title:text,organisation:text,year:tag,notes:tex
 const fields:Record<string,z.ZodTypeAny>={};
 for(const [key,value] of Object.entries(empty)) fields[key]=typeof value==='boolean'?z.boolean():typeof value==='string'?text:z.array(tag).max(100);
 export const profileSchema=z.object({ ...fields,callSheet:callSheetSchema,
- bodyBuild:z.enum(['','slim','lean_athletic','muscular','medium','broad_solid','full_rounded','curvy','self_describe','not_disclosed']),bodyBuildDescription:z.string().trim().max(120),
+ workStatus:z.enum(['','full_time_actor','presently_working','not_working','prefer_not_to_say']),occupation:z.string().trim().max(120),
+ bodyBuild:z.enum(['','slim','lean_athletic','muscular','medium','broad_solid','stocky','petite','toned','curvy','hourglass','full_rounded','self_describe','not_disclosed']),bodyBuildDescription:z.string().trim().max(120),
  name:z.string().trim().min(1).max(80),role:tag.min(1),city:tag.min(1),
  photo:z.string().max(1_500_000).refine(s=>!s||/^data:image\/(jpeg|png|webp);base64,/.test(s)),
  skillCategories:z.record(tag,tag),clothing:z.record(tag,tag),
@@ -17,6 +18,7 @@ export const profileSchema=z.object({ ...fields,callSheet:callSheetSchema,
  education:z.array(z.object({id:tag,qualification:text,institution:text,year:tag,notes:text})).max(100),
 }).superRefine((value,ctx)=>{ const d=value as Record<string,unknown>;
  if(d.bodyBuild==='self_describe'&&!String(d.bodyBuildDescription||'').trim())ctx.addIssue({code:'custom',message:'Describe your body build or choose another option.'});
+ if(d.workStatus==='presently_working'&&!String(d.occupation||'').trim())ctx.addIssue({code:'custom',path:['occupation'],message:'Enter your current occupation.'});
  const number=(key:string,max:number,integer=false)=>{const value=d[key];if(typeof value==='string'&&value!==''&&(!Number.isFinite(Number(value))||Number(value)<0||Number(value)>max||(integer&&!Number.isInteger(Number(value)))))ctx.addIssue({code:'custom',path:[key],message:'Enter a valid '+key});};
  number('ageFrom',100,true);number('ageTo',100,true);number('heightFeet',8,true);number('heightInches',11,true);
  for(const key of ['weight','chest','bust','waist','hip'])number(key,500);

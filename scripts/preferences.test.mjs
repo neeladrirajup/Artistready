@@ -6,14 +6,17 @@ const require=createRequire(import.meta.url),ts=require('typescript');
 function load(file,mocks={}){const exports={};const code=ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;new Function('require','exports',code)(name=>name in mocks?mocks[name]:require(name),exports);return exports;}
 const catalog=load('src/lib/artist-preferences.ts');
 const sql=new DatabaseSync(':memory:');
-sql.exec(readFileSync('drizzle/0000_empty_wild_child.sql','utf8'));
-sql.exec(readFileSync('drizzle/0001_noisy_daredevil.sql','utf8'));
-sql.exec(readFileSync('drizzle/0002_quiet_pandemic.sql','utf8'));
-const db={prepare(query){let params=[];return {bind(...args){params=args;return this;},async first(){return sql.prepare(query).get(...params)||null;},async all(){return {results:sql.prepare(query).all(...params)};},async run(){return {meta:{changes:Number(sql.prepare(query).run(...params).changes)}};}};}};
-const api=load('src/app/api/profile/[[...path]]/route.ts',{'cloudflare:workers':{env:{DB:db,BUCKET:{}}},'../../../../../lib/profile-runtime':{getProfileRuntime:()=>null},'@/lib/profile-validation':{profileSchema:{}},'@/lib/profile-model':{empty:{}},'@/lib/artist-preferences':catalog});
+for(const file of ['0000_empty_wild_child','0001_noisy_daredevil','0002_quiet_pandemic','0003_smooth_wallflower','0004_absent_abomination','0005_relational_profiles','0006_lyrical_deathstrike'])sql.exec(readFileSync(`drizzle/${file}.sql`,'utf8'));
+const db={prepare(query){let params=[];return {bind(...args){params=args;return this;},async first(){return sql.prepare(query).get(...params)||null;},async all(){return {results:sql.prepare(query).all(...params)};},async run(){return {meta:{changes:Number(sql.prepare(query).run(...params).changes)}};}};},async batch(statements){sql.exec('BEGIN IMMEDIATE');try{const result=[];for(const statement of statements)result.push(await statement.run());sql.exec('COMMIT');return result;}catch(error){sql.exec('ROLLBACK');throw error;}}};
+const model={empty:{}};
+const relational=load('src/lib/profile-relational.ts',{'./profile-model':model,'./artist-preferences':catalog});
+const sections=load('src/lib/profile-sections.ts');
+const api=load('src/app/api/profile/[[...path]]/route.ts',{'cloudflare:workers':{env:{DB:db,BUCKET:{}}},'../../../../../lib/profile-runtime':{getProfileRuntime:()=>null},'@/lib/profile-validation':{profileSchema:{}},'@/lib/profile-model':model,'@/lib/artist-preferences':catalog,'@/lib/profile-relational':relational,'@/lib/postgres-profile':{},'@/lib/profile-sections':sections});
 const owner=Buffer.from(await crypto.subtle.digest('SHA-256',new TextEncoder().encode('test-owner'))).toString('hex');
 sql.prepare('INSERT INTO profile_accounts VALUES (?,?)').run(owner,'now');
-sql.prepare('INSERT INTO profiles VALUES (?,?,?,?,?,?,?,?)').run(owner,'Test','Actor','Hyderabad','{}',1,'now','now');
+sql.prepare('INSERT INTO profiles VALUES (?,?,?,?,?,?,?)').run(owner,'Test','Actor','Hyderabad',1,'now','now');
+sql.prepare('INSERT INTO artist_profile_details(artist_id) VALUES (?)').run(owner);
+sql.prepare("INSERT INTO artist_measurements(artist_id,measurement_fit,body_build) VALUES (?,'','')").run(owner);
 async function request(method='GET',body,subject='test-owner',path='preferences',origin='https://test.example'){return api[method](new Request('https://test.example/api/profile/'+path,{method,headers:{...(subject?{'oai-authenticated-user-id':subject}:{}),origin,'Content-Type':'application/json'},...(body?{body:JSON.stringify(body)}:{})}));}
 assert.equal((await request('GET',null,'')).status,401);
 assert.deepEqual((await (await request()).json()).preferences,catalog.blankPreferences);

@@ -1,0 +1,5 @@
+.created-identity-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0 0}
+.created-identity-facts>div{padding:14px 16px;border:1px solid rgba(232,196,114,.2);border-radius:12px;background:rgba(255,255,255,.035)}
+.created-identity-facts dt{color:#adadb4;font-size:.8rem;margin-bottom:5px}
+.created-identity-facts dd{margin:0;color:#f6f1e8}
+@media(max-width:580px){.created-identity-facts{grid-template-columns:1fr}}

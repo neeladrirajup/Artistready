@@ -15,6 +15,8 @@ const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 const managedLinux = readExecutionProfile() === "managed-linux";
 const independentCloudflare = process.env.ARTISTREADY_CLOUDFLARE === "1";
 const localPostgres = process.env.ARTISTREADY_LOCAL_POSTGRES === "1";
+const localPostgresUrl = process.env.ARTISTREADY_LOCAL_PG_URL;
+if (localPostgres && !localPostgresUrl) throw new Error("ARTISTREADY_LOCAL_PG_URL is required for local PostgreSQL mode.");
 
 const localBindingConfig = {
   main: independentCloudflare
@@ -37,6 +39,9 @@ const localBindingConfig = {
           bucket_name: "site-creator-r2",
         },
       ]
+    : [],
+  hyperdrive: localPostgres
+    ? [{ binding: "POSTGRES", id: SITE_CREATOR_PLACEHOLDER_DATABASE_ID, localConnectionString: localPostgresUrl }]
     : [],
 };
 

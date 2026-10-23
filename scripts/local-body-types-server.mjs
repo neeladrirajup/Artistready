@@ -13,8 +13,8 @@ const server=createServer((request,response)=>{
  const fit=url.searchParams.get('fit')||'neutral';
  const craft=url.searchParams.get('craft')||'';
  if(bodyTypes?!fits.has(fit):!crafts.has(craft)){response.writeHead(400).end();return;}
- const query=bodyTypes?`SELECT artistready.list_body_types('${fit}')::text`:`SELECT artistready.list_craft_roles('${craft}')::text`;
- const result=spawnSync(psql,['-X','-h','127.0.0.1','-p','5432','-U','postgres','-d','artistready','-v','ON_ERROR_STOP=1','-tA','-c',query],{
+ const query=bodyTypes?`CALL artistready.read_body_types('${fit}',NULL)`:`CALL artistready.read_craft_roles('${craft}',NULL)`;
+ const result=spawnSync(psql,['-X','-q','-h','127.0.0.1','-p','5432','-U','postgres','-d','artistready','-v','ON_ERROR_STOP=1','-tA','-c','SET ROLE artistready_api','-c',query],{
   env:process.env,encoding:'utf8',timeout:10000,maxBuffer:1024*1024,
  });
  if(result.error||result.status!==0){response.writeHead(503,{'Content-Type':'application/json','Cache-Control':'no-store'}).end('{"error":"Local catalog is unavailable"}');return;}

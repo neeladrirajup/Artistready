@@ -1,0 +1,13 @@
+.created-profile .created-content>section.created-measurements-shell{
+  padding:25px;
+  border:1px solid var(--line);
+  border-radius:15px;
+  background:linear-gradient(130deg,#152b3650,#09141b66);
+}
+.cinematic .created-profile .created-content>section.created-measurements-shell{
+  border-color:#3f473c;
+  background:linear-gradient(125deg,#33372b55,#111611);
+}
+@media(max-width:760px){
+  .created-profile .created-content>section.created-measurements-shell{padding:20px 16px}
+}

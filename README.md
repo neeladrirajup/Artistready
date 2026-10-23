@@ -19,20 +19,25 @@ npm install
 npm run build
 ```
 
-Apply pending local D1 migrations as described in `db/README.md`, then run:
+For local PostgreSQL profile development, apply migrations 008–011 from
+`../postgresql-setup`, then run:
 
 ```
-npm run dev
+powershell -File ./start-local-postgres.ps1
 ```
 
 Open http://127.0.0.1:5173. The portable starter includes a local test sign-in at `/signin-with-chatgpt?return_to=/`; this simulator is absent from hosted production. Local D1/R2 data lives in ignored `.wrangler/state` and is independent of hosted data.
 
-To use the local PostgreSQL Body Type catalog, first apply migration 006 with
-`../postgresql-setup/apply-body-types.ps1`, then start the app with
-`./start-local-postgres.ps1`. The Body Type selector in registration and profile
-editing will show “Choices loaded from local PostgreSQL.” This local development
-connection covers the Body Type catalog; profile records and uploads still use
-the local D1/R2 emulator. The hosted site is unchanged.
+The local app now reads and saves registered profiles and preferences through
+PostgreSQL stored procedures. The local PostgreSQL adapter uses `CALL` for data
+operations and returns the procedure's JSONB output as an HTTP JSON response.
+Each profile editor calls its own section procedure;
+only that section's fields are accepted, with a profile-version check. Artist search also runs in PostgreSQL. Profile
+fields are stored in relational columns and rows. Uploaded bytes stay in the
+local R2 emulator; media metadata is synchronized to PostgreSQL. The hosted
+site continues using D1/R2 until a hosted PostgreSQL database is configured;
+its legacy D1 path still contains direct SQL because D1 has no stored procedures.
+`npm run dev` without the launcher retains the D1 development path.
 
 For craft-specific roles, apply migration 007 with
 `../postgresql-setup/apply-craft-roles.ps1` and use the same launcher. The role
@@ -82,7 +87,7 @@ Adult-only fields require the artist's explicit 18+ confirmation (self-attestati
 not identity verification). No defaults or answers are inferred from playing age.
 Run node scripts/preferences.test.mjs to verify persistence, ownership, privacy,
 origin checks, validation, conflict handling and clear-answer behavior in SQLite.
-The local PostgreSQL catalog remains separate from hosted D1; there is no live sync.
+Local preferences use PostgreSQL; the hosted deployment retains its D1 database.
 
 Preferences now support only_me (default for existing records), managers, and
 everyone. Everyone means authenticated viewers who can access this Site; the
@@ -97,10 +102,10 @@ until an administrator approves manager accounts. Notes follow the same audience
 as answers. Tests cover all audiences, revoked managers and cross-owner writes.
 
 Call Sheet & Shoot Schedule is a separately editable section in profile Overview
-and Details. The existing profile document stores callSheet (shootingStatus,
+and Details. The profile stores callSheet (shootingStatus,
 optional project/date range, notes and up to 50 availability ranges). It uses the
-existing authenticated/versioned profile API and D1 record; no new SQL table or
-migration is needed. Existing records default to an unspecified status and no
+existing authenticated/versioned profile API. PostgreSQL stores schedule fields
+and date rows; hosted D1 uses its relational tables. Existing records default to an unspecified status and no
 dates. Ranges support available, tentative, booked and unavailable; invalid dates,
 reversed ranges, overlaps and available/current-shoot conflicts are rejected.
 Project details are optional and visible with the artist profile. Dates are
@@ -134,9 +139,8 @@ so another signed-in viewer sees the intended artist. Copy-link includes manual
 fallback and device sharing when available. Site audience/privacy is unchanged.
 
 Measurements include optional bodyBuild and bodyBuildDescription fields in the
-saved profile document (D1); existing profiles default to unspecified. Both male
+saved profile data; existing profiles default to unspecified. Both male
 and female measurement fits offer neutral build descriptions; female/neutral also
 offer Curvy. Artists can self-describe or decline disclosure. Registration and
 section editing share the catalog. The saved fit is displayed with Body Build.
-The laptop PostgreSQL snapshot is separate; these fields use existing document
-storage without adding a relational measurements table or live synchronization.
+The local PostgreSQL `artist_measurements` table stores these fields in columns.

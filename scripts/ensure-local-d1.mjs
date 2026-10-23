@@ -22,15 +22,30 @@ export function ensureLocalD1() {
     { tables: ['verified_managers'], file: '0002_quiet_pandemic.sql' },
     { tables: ['artist_search', 'artist_search_skills', 'artist_search_languages'], file: '0003_smooth_wallflower.sql' },
     { tables: ['artist_measurements'], file: '0004_absent_abomination.sql' },
+    { tables: ['artist_profile_details', 'artist_call_sheets', 'artist_preference_answers'], file: '0005_relational_profiles.sql' },
   ];
   try {
     db.exec('BEGIN IMMEDIATE');
     for (const migration of migrations) {
+      // Migration 0005 replaces the old JSON-derived search projection.
+      if (migration.file === '0003_smooth_wallflower.sql' && exists('artist_profile_details')) continue;
       const present = migration.tables.filter(exists);
       if (present.length === migration.tables.length) continue;
       if (present.length) throw new Error(`Incomplete local D1 migration: ${migration.file}`);
       const sql = readFileSync(join(root, 'drizzle', migration.file), 'utf8').replaceAll('--> statement-breakpoint', '\n');
       db.exec(sql);
+    }
+    if (!db.prepare("SELECT 1 FROM pragma_table_info('artist_measurements') WHERE name='height'").get()) {
+      db.exec(readFileSync(join(root, 'drizzle', '0006_lyrical_deathstrike.sql'), 'utf8'));
+    }
+    if (!db.prepare("SELECT 1 FROM pragma_table_info('artist_profile_details') WHERE name='marital_status'").get()) {
+      db.exec(readFileSync(join(root, 'drizzle', '0007_essential_appearance.sql'), 'utf8'));
+    }
+    if (!db.prepare("SELECT 1 FROM pragma_table_info('artist_profile_details') WHERE name='hair_color'").get()) {
+      db.exec(readFileSync(join(root, 'drizzle', '0008_hair_colour.sql'), 'utf8'));
+    }
+    if (!db.prepare("SELECT 1 FROM pragma_table_info('artist_profile_details') WHERE name='work_status'").get()) {
+      db.exec(readFileSync(join(root, 'drizzle', '0009_work_status.sql'), 'utf8'));
     }
     db.exec('COMMIT');
   } catch (error) { db.exec('ROLLBACK'); throw error; }

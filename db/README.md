@@ -1,14 +1,18 @@
 # Hosted profile storage
 
-The deployed application uses Cloudflare D1 (`DB`) for account-owned profile
-documents and media metadata, and R2 (`BUCKET`) for original photo/video files.
+The application uses Cloudflare D1 (`DB`) for account-owned relational profile
+data and media metadata, and R2 (`BUCKET`) for original photo/video files.
 Sites provisions both resources from `.openai/hosting.json`. No database password
 or service credential is included in the frontend.
 
-`profiles.document` stores every validated profile field, including project
-credits, education, training, recognition, roles, categorized skills, languages,
-measurements, wardrobe sizes, booking details and showreel links. Name, role and
-city also have structured columns. `profile_media` records file metadata and R2
+`profiles` stores identity, name, role, city and the edit version.
+`artist_profile_details` and `artist_measurements` store one value per scalar
+column. Repeatable entries have related tables: `artist_skills`,
+`artist_languages`, `artist_credits`, `artist_education`, `artist_training`,
+`artist_recognition`, `artist_clothing_sizes`, and the call-sheet date table.
+Preference visibility and individual answers have their own tables. Measurements
+include a readable `height` column such as `5 ft 6 in`, plus numeric feet,
+remaining inches, and total inches for range filters. `profile_media` records file metadata and R2
 object references. The stable trusted Sites user ID is hashed into the owning
 account key. It is never supplied by a client form. All API requests require the
 platform identity; every mutation is scoped to that account and checks Origin.
@@ -18,19 +22,12 @@ The eight illustrative artists remain clearly identified sample content in
 `src/lib/artists.ts`. Registered profiles are fetched from the database and added
 to the list. Site access remains controlled by the existing private Sites policy.
 
-Migration `0003_smooth_wallflower.sql` adds `artist_search` plus indexed skill and
-language link tables. Database triggers backfill existing profiles and refresh
-these search rows whenever a profile is inserted, edited, or deleted. The
-`/api/profile/search` endpoint filters registered artists in D1 by location,
-craft, gender, playing age, availability, language, skill, and text search. It
-returns 50 at a time; the list loads additional matches on request. The full
-JSON document remains the source for profile display and editing. Sample artists
-are still filtered locally because they are illustrative records, not D1 rows.
-Migration `0004_absent_abomination.sql` adds `artist_measurements`. It stores
-height, weight, chest/bust, waist, hip, body build and measurement fit as typed
-values, backfills existing profiles, and follows profile edits through triggers.
-The search API accepts a body-build choice and optional height bounds; the
-filter panel offers the body-build choice. Unfilled measurements remain null.
+Migration `0005_relational_profiles.sql` backfills every saved profile and
+preference field into these tables, then removes the JSON document columns and
+the old JSON-derived search projection. `/api/profile/search` filters directly
+against the relational tables. It returns 50 at a time; the list loads more on
+request. Migration `0006_lyrical_deathstrike.sql` adds the readable height
+column. The eight illustrative artists remain local sample content.
 
 ## Import and save behavior
 
