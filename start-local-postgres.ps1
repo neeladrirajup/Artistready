@@ -1,32 +1,17 @@
-$ErrorActionPreference='Stop'
-$credential=Import-Clixml -LiteralPath 'C:\Users\neela\AppData\Local\Artistready\PostgreSQL17\postgres.credential.xml'
-$priorPassword=$env:PGPASSWORD
-$priorLocal=$env:ARTISTREADY_LOCAL_POSTGRES
-$priorClient=$env:VITE_ARTISTREADY_LOCAL_POSTGRES
-$priorUrl=$env:ARTISTREADY_LOCAL_PG_URL
-$priorLocation=Get-Location
-$helper=$null
+$ErrorActionPreference = 'Stop'
+$priorUrl = $env:ARTISTREADY_LOCAL_PG_URL
 try {
- $env:PGPASSWORD=$credential.GetNetworkCredential().Password
- $env:ARTISTREADY_LOCAL_POSTGRES='1'
- $env:VITE_ARTISTREADY_LOCAL_POSTGRES='1'
- $env:ARTISTREADY_LOCAL_PG_URL='postgresql://postgres:'+ [Uri]::EscapeDataString($env:PGPASSWORD) +'@127.0.0.1:5432/artistready'
- $helper=Start-Process -FilePath 'C:\Program Files\nodejs\node.exe' -ArgumentList 'scripts/local-body-types-server.mjs' -WorkingDirectory $PSScriptRoot -WindowStyle Hidden -PassThru
- $ready=$false
- for($i=0;$i -lt 15;$i++){
-  if($helper.HasExited){throw 'Local Body Type catalog service stopped unexpectedly'}
-  try {if((Invoke-WebRequest -Uri 'http://127.0.0.1:5174/health' -UseBasicParsing -TimeoutSec 1).StatusCode -eq 200){$ready=$true;break}}catch{}
-  Start-Sleep -Milliseconds 250
- }
- if(-not $ready){throw 'Local Body Type catalog service did not start'}
- Set-Location $PSScriptRoot
- & npm.cmd run dev
+  if (-not $env:ARTISTREADY_LOCAL_PG_URL) {
+    $credentialFile = Join-Path $env:LOCALAPPDATA 'Artistready/PostgreSQL17/postgres.credential.xml'
+    if (-not (Test-Path -LiteralPath $credentialFile)) {
+      throw 'Set ARTISTREADY_LOCAL_PG_URL to your local artistready PostgreSQL connection URL.'
+    }
+    $credential = Import-Clixml -LiteralPath $credentialFile
+    $password = [Uri]::EscapeDataString($credential.GetNetworkCredential().Password)
+    $env:ARTISTREADY_LOCAL_PG_URL = "postgresql://postgres:${password}@127.0.0.1:5432/artistready"
+  }
+  Push-Location $PSScriptRoot
+  try { & npm.cmd run dev:postgres } finally { Pop-Location }
 } finally {
- if($helper -and -not $helper.HasExited){Stop-Process -Id $helper.Id}
- $env:PGPASSWORD=$priorPassword
- $env:ARTISTREADY_LOCAL_POSTGRES=$priorLocal
- $env:VITE_ARTISTREADY_LOCAL_POSTGRES=$priorClient
- $env:ARTISTREADY_LOCAL_PG_URL=$priorUrl
- Set-Location $priorLocation
- $credential=$null
+  $env:ARTISTREADY_LOCAL_PG_URL = $priorUrl
 }

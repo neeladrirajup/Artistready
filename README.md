@@ -12,6 +12,8 @@ The existing Sites audience stays private. Hosted access uses the trusted Sites 
 
 ## Local development
 
+For a clean-machine developer handoff, follow [TEAM-SETUP.md](TEAM-SETUP.md). The repository now includes the local PostgreSQL schema, tables, catalogs, and stored procedures under `postgresql/sql/`.
+
 Use Node.js 24 or newer:
 
 ```
@@ -19,8 +21,10 @@ npm install
 npm run build
 ```
 
-For local PostgreSQL profile development, apply migrations 008–011 from
-`../postgresql-setup`, then run:
+For local PostgreSQL profile development, create and migrate the database with
+`npm run db:postgres:setup`, then run `npm run dev:postgres` after setting the
+connection URLs as described in the team setup guide. On the original Windows
+machine, the existing credential file can also be used with:
 
 ```
 powershell -File ./start-local-postgres.ps1
@@ -39,8 +43,7 @@ site continues using D1/R2 until a hosted PostgreSQL database is configured;
 its legacy D1 path still contains direct SQL because D1 has no stored procedures.
 `npm run dev` without the launcher retains the D1 development path.
 
-For craft-specific roles, apply migration 007 with
-`../postgresql-setup/apply-craft-roles.ps1` and use the same launcher. The role
+Migration 007 installs the craft-specific role catalog. The role
 picker offers 102 choices across Actor, Actress, Director, Writer,
 Cinematographer and Other creative. Switching craft clears the prior craft's
 role selections.

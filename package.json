@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "node scripts/run-framework.mjs dev",
+    "dev:postgres": "node scripts/dev-postgres.mjs",
+    "db:postgres:setup": "node scripts/setup-postgres.mjs",
     "build": "node scripts/run-framework.mjs build",
     "deploy:cloudflare": "node scripts/deploy-cloudflare.mjs",
     "start": "node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js dev --config dist/server/wrangler.json --local --persist-to .wrangler/state --ip 127.0.0.1 --inspector-port 0",
