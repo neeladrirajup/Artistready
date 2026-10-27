@@ -4,6 +4,25 @@ The source repository contains the application and the complete local PostgreSQL
 
 These steps are for a Windows laptop. Each developer gets an independent local database. The owner should first invite developers who will push code through **Repository Settings → Collaborators → Add people**; the repository can be cloned without an invitation. Developers must accept the invitation before pushing branches.
 
+## One-script setup on a new Windows laptop
+
+Windows Package Manager (`winget`) must be available. Open PowerShell and run these commands. Review the script in the repository before running it; the process-scoped execution policy below does not change the machine's permanent settings.
+
+```powershell
+$setup = Join-Path $env:TEMP 'Setup-Artistready.ps1'
+Invoke-WebRequest 'https://raw.githubusercontent.com/neeladrirajup/Artistready/main/Setup-Artistready.ps1' -OutFile $setup
+Unblock-File -LiteralPath $setup
+powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File $setup
+```
+
+The script installs missing Git, Node.js 24 LTS, and PostgreSQL 17 using `winget`. Complete any Windows installer and administrator prompts. In the PostgreSQL installer, choose port `5432` and set a password **for that developer's laptop**. The script then clones the public repository to `%USERPROFILE%\Artistready`, installs packages, prompts for the PostgreSQL password, applies the 14 migrations, runs the type check and build, and starts the app on `http://127.0.0.1:5173`. Press Ctrl+C to stop it. It does not save the password to the repository or a file.
+
+The script can be rerun on a clean checkout. It refuses to overwrite local Git changes or an unrelated directory. To install somewhere else, add `-InstallPath 'C:\path\to\Artistready'` to the final command. Add `-NoLaunch` if setup should finish without starting the app. If `winget` is unavailable, install Microsoft's App Installer first or use the manual instructions below.
+
+The setup script is interactive because the PostgreSQL installer and any Windows permission prompts require the developer's input. It does not copy real profile records or uploaded media.
+
+## Manual setup
+
 ## Prerequisites
 
 - [Git for Windows](https://git-scm.com/download/win) and [Node.js 24 LTS](https://nodejs.org/en/download).

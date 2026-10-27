@@ -12,7 +12,7 @@ The existing Sites audience stays private. Hosted access uses the trusted Sites 
 
 ## Local development
 
-For a clean-machine developer handoff, follow [TEAM-SETUP.md](TEAM-SETUP.md). The repository now includes the local PostgreSQL schema, tables, catalogs, and stored procedures under `postgresql/sql/`.
+For a clean-machine developer handoff, run [Setup-Artistready.ps1](Setup-Artistready.ps1) or follow [TEAM-SETUP.md](TEAM-SETUP.md). The repository includes the local PostgreSQL schema, tables, catalogs, and stored procedures under `postgresql/sql/`.
 
 Use Node.js 24 or newer:
 
