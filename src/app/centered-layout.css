@@ -3,10 +3,9 @@
   position: relative;
   isolation: isolate;
   background:
-    radial-gradient(ellipse 38% 24% at 12% 18%, #a5682629, transparent 78%),
-    radial-gradient(ellipse 34% 30% at 88% 42%, #006b8730, transparent 78%),
-    radial-gradient(ellipse 40% 30% at 48% 88%, #8956221a, transparent 80%),
-    linear-gradient(155deg, #11171b 0%, #080d12 47%, #0a1319 100%);
+    radial-gradient(ellipse 45% 26% at 7% 34%, #b9783036, transparent 80%),
+    radial-gradient(ellipse 48% 33% at 94% 64%, #05647c40, transparent 80%),
+    linear-gradient(155deg, #12181b, #060b10 55%, #0a1820);
 }
 
 .onboarding::before {
@@ -15,11 +14,7 @@
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background-image:
-    linear-gradient(#ffffff0b 1px, transparent 1px),
-    linear-gradient(90deg, #ffffff0b 1px, transparent 1px);
-  background-size: 76px 76px;
-  mask-image: radial-gradient(ellipse 75% 70% at 50% 35%, #0005, transparent 95%);
+  background: linear-gradient(125deg, transparent 35%, #f8c97208 49%, transparent 61%);
 }
 
 .app-shell,
@@ -34,21 +29,50 @@
 .onboard-layout {
   display: block;
   min-height: calc(100vh - 108px);
+  position: relative;
+  isolation: isolate;
+  padding-block: 36px 72px;
 }
 
-.onboard-scene,
 .onboard-live {
   display: none;
+}
+
+.onboard-scene {
+  display: block;
+  position: absolute;
+  inset: 0 0 auto;
+  height: 420px;
+  min-height: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: #17120e;
+  mask-image: linear-gradient(#000 0%, #000 58%, transparent 100%);
+}
+
+.onboard-scene .scene-copy,
+.onboard-scene .scene-bottom { display: none; }
+.onboard-scene .onboard-set { opacity: .95; }
+.onboard-scene::after {
+  background: linear-gradient(90deg, #080d12b3, #080d124d 45%, #080d12aa),
+    linear-gradient(0deg, #080d12, transparent 65%);
 }
 
 .onboard-workspace {
   width: 100%;
   max-width: 800px;
   margin-inline: auto;
-  padding: 38px 38px 64px;
+  padding: 38px 42px 64px;
+  position: relative;
+  background: linear-gradient(180deg, #0c141ae8, #0b1217f5 420px, #0b1217f0);
+  border: 1px solid #edc57930;
+  border-radius: 22px;
+  box-shadow: 0 28px 85px #0009, 0 0 70px #e6aa3311, inset 0 1px #ffffff12;
+  backdrop-filter: blur(16px);
 }
 
 @media (max-width: 760px) {
-  .onboard-layout { min-height: calc(100dvh - 85px); }
-  .onboard-workspace { padding: 24px 17px 48px; }
+  .onboard-layout { min-height: calc(100dvh - 85px); padding: 18px 10px 38px; }
+  .onboard-scene { height: 280px; }
+  .onboard-workspace { padding: 24px 17px 48px; border-radius: 16px; }
 }
