@@ -14,6 +14,7 @@ import './required-fields.css';
 import './profile-section-icons.css';
 import './profile-identity-facts.css';
 import './measurement-spacing.css';
+import './centered-layout.css';
 export const metadata: Metadata = { title: 'Artistready — People. Projects. Opportunities.', description: 'Find your next collaborator. Explore cinematic artist portfolios, discover creative talent, and build your shortlist. Sample-data design preview.' };
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return <html lang="en"><body>{children}</body></html>;

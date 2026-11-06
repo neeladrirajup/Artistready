@@ -1,0 +1,31 @@
+/* Use one centered page frame throughout the application. */
+.app-shell,
+.onboard-header,
+.onboard-layout {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+}
+
+/* The profile form is the only content in the onboarding page body. */
+.onboard-layout {
+  display: block;
+  min-height: calc(100vh - 108px);
+}
+
+.onboard-scene,
+.onboard-live {
+  display: none;
+}
+
+.onboard-workspace {
+  width: 100%;
+  max-width: 800px;
+  margin-inline: auto;
+  padding: 38px 38px 64px;
+}
+
+@media (max-width: 760px) {
+  .onboard-layout { min-height: calc(100dvh - 85px); }
+  .onboard-workspace { padding: 24px 17px 48px; }
+}
