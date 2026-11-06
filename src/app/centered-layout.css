@@ -1,4 +1,27 @@
 /* Use one centered page frame throughout the application. */
+.onboarding {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse 38% 24% at 12% 18%, #a5682629, transparent 78%),
+    radial-gradient(ellipse 34% 30% at 88% 42%, #006b8730, transparent 78%),
+    radial-gradient(ellipse 40% 30% at 48% 88%, #8956221a, transparent 80%),
+    linear-gradient(155deg, #11171b 0%, #080d12 47%, #0a1319 100%);
+}
+
+.onboarding::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(#ffffff0b 1px, transparent 1px),
+    linear-gradient(90deg, #ffffff0b 1px, transparent 1px);
+  background-size: 76px 76px;
+  mask-image: radial-gradient(ellipse 75% 70% at 50% 35%, #0005, transparent 95%);
+}
+
 .app-shell,
 .onboard-header,
 .onboard-layout {
