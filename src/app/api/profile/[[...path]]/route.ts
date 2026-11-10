@@ -19,17 +19,10 @@ async function boundedBody(request:Request,limit:number){
 }
 async function handle(request:Request){
  try{
-  const subject=request.headers.get('oai-authenticated-user-id');
-  if(!subject)return json({error:'Sign in with your site account to access your profile.'},401);
   const env=getProfileRuntime()||workerEnv;
   const postgres=(env as typeof env&{POSTGRES?:PostgresBinding}).POSTGRES;
-  if(!env.BUCKET||(!postgres&&!env.DB))return json({error:'Profile storage is unavailable. Your browser copy is safe.'},503);
-  const db=env.DB!,bucket=env.BUCKET,owner=await hash(subject);
   const url=new URL(request.url),path=url.pathname.replace(/^\/api\/profile\/?/,'').split('/').filter(Boolean);
-  if(request.method!=='GET'){
-   const origin=request.headers.get('origin');
-   if(!origin||origin!==url.origin)return json({error:'Please save from the Artistready website.'},403);
-  }
+  // Public location catalogs are needed while a new artist fills out onboarding.
   if(request.method==='GET'&&path[0]==='locations'&&postgres){
    if(path.length===2&&path[1]==='states')return json(await getIndiaStates(postgres));
    if(path.length===2&&path[1]==='cities'){
@@ -37,6 +30,14 @@ async function handle(request:Request){
     if(!/^[A-Z]{2,3}$/.test(code))return json({error:'Choose a state first.'},400);
     return json(await getIndiaCities(postgres,code));
    }
+  }
+  const subject=request.headers.get('oai-authenticated-user-id');
+  if(!subject)return json({error:'Sign in with your site account to access your profile.'},401);
+  if(!env.BUCKET||(!postgres&&!env.DB))return json({error:'Profile storage is unavailable. Your browser copy is safe.'},503);
+  const db=env.DB!,bucket=env.BUCKET,owner=await hash(subject);
+  if(request.method!=='GET'){
+   const origin=request.headers.get('origin');
+   if(!origin||origin!==url.origin)return json({error:'Please save from the Artistready website.'},403);
   }
   if(request.method==='GET'&&path[0]==='me'){
    if(postgres)return json(await getMyProfile(postgres,owner));
