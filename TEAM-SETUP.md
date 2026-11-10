@@ -4,6 +4,19 @@ The source repository contains the application and the complete local PostgreSQL
 
 These steps are for a Windows laptop. Each developer gets an independent local database. The owner should first invite developers who will push code through **Repository Settings → Collaborators → Add people**; the repository can be cloned without an invitation. Developers must accept the invitation before pushing branches.
 
+## Download the code into a chosen workspace
+
+If Git for Windows is already installed, download and run the repository's small clone script. Replace `C:\Work` with the developer's preferred workspace folder. The script creates `Artistready` inside that folder.
+
+```powershell
+$download = Join-Path $env:TEMP 'Get-Artistready.ps1'
+Invoke-WebRequest 'https://raw.githubusercontent.com/neeladrirajup/Artistready/main/Get-Artistready.ps1' -OutFile $download
+Unblock-File -LiteralPath $download
+powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File $download -WorkspacePath 'C:\Work'
+```
+
+Running it again leaves an existing checkout alone. Add `-Update` to the final command to fast-forward a clean `main` checkout. It refuses to overwrite an unrelated folder or local changes. This script downloads source code only; use the complete setup below to install Node.js, PostgreSQL, packages, and the database.
+
 ## One-script setup on a new Windows laptop
 
 Windows Package Manager (`winget`) must be available. Open PowerShell and run these commands. Review the script in the repository before running it; the process-scoped execution policy below does not change the machine's permanent settings.
