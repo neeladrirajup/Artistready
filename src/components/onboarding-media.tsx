@@ -4,26 +4,27 @@ import { Camera, Check, Film, Plus, X } from 'lucide-react';
 import { mediaError } from '@/lib/onboarding-media';
 import { profileRequest,uploadMedia,type CloudMedia } from '@/lib/profile-api';
 
-type StoredMedia={id:string;kind:'photo'|'video';file:File;created:number};
+type StoredMedia={id:string;kind:'photo'|'video';file:File;created:number;ownerId?:string};
 type Media=StoredMedia&{url:string};
 function database():Promise<IDBDatabase>{return new Promise((resolve,reject)=>{const request=indexedDB.open('artist-ready-onboarding-media',1);request.onupgradeneeded=()=>request.result.createObjectStore('files',{keyPath:'id'});request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error);});}
 async function stored(action:'read'|'put'|'delete',value?:StoredMedia|string):Promise<StoredMedia[]>{const db=await database();try{return await new Promise((resolve,reject)=>{const tx=db.transaction('files',action==='read'?'readonly':'readwrite'),store=tx.objectStore('files');let rows:StoredMedia[]=[];if(action==='read'){const request=store.getAll();request.onsuccess=()=>{rows=request.result;};}else if(action==='put')store.put(value);else store.delete(value as string);tx.oncomplete=()=>resolve(rows);tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});}finally{db.close();}}
-export function useOnboardingMedia(){
+export function useOnboardingMedia(ownerId?:string){
  const [cloud,setCloud]=useState(false),[loaded,setLoaded]=useState(false);
  const cloudRef=useRef(false);
  const [items,setItems]=useState<Media[]>([]),[busy,setBusy]=useState(false),[message,setMessage]=useState('');
  const urls=useRef(new Set<string>());
  function attach(item:StoredMedia):Media{const url=URL.createObjectURL(item.file);urls.current.add(url);return {...item,url};}
- useEffect(()=>{let active=true;stored('read').then(rows=>{if(active&&!cloudRef.current)setItems(rows.sort((a,b)=>a.created-b.created).map(attach));}).catch(()=>{if(active)setMessage('Media storage is unavailable. Files you choose will stay in this session only.');}).finally(()=>{if(active)setLoaded(true);});return()=>{active=false;urls.current.forEach(url=>URL.revokeObjectURL(url));urls.current.clear();};},[]);
+ useEffect(()=>{if(ownerId==='')return;let active=true;stored('read').then(rows=>{if(active&&!cloudRef.current)setItems(rows.filter(row=>ownerId===undefined?!row.ownerId:row.ownerId===ownerId).sort((a,b)=>a.created-b.created).map(attach));}).catch(()=>{if(active)setMessage('Media storage is unavailable. Files you choose will stay in this session only.');}).finally(()=>{if(active)setLoaded(true);});return()=>{active=false;urls.current.forEach(url=>URL.revokeObjectURL(url));urls.current.clear();};},[ownerId]);
  function remote(item:CloudMedia):Media{return {...item,file:{name:item.name,size:item.size,type:item.mime} as File};}
  function connect(rows:CloudMedia[]){cloudRef.current=true;setCloud(true);setItems(rows.map(remote));setLoaded(true);}
- async function importFiles(){const result:CloudMedia[]=[];for(const item of items)result.push(!cloud?await uploadMedia(item):{id:item.id,kind:item.kind,name:item.file.name,mime:item.file.type,size:item.file.size,created:item.created,url:item.url});return result;}
+ async function importFiles(){const result:CloudMedia[]=[];for(const item of items)result.push(!cloud?await uploadMedia(item.kind==='video'?{...item,id:'showreel'}:item):{id:item.id,kind:item.kind,name:item.file.name,mime:item.file.type,size:item.file.size,created:item.created,url:item.url});return result;}
  async function add(files:File[],kind:'photo'|'video'){
   setMessage('');if(!files.length)return;const existing=items.filter(i=>i.kind==='photo');if(kind==='photo'&&existing.length+files.length>20){setMessage('You can add up to 20 photos. Remove a photo before adding more.');return;}
   for(const file of files){const error=mediaError(file,kind);if(error){setMessage(file.name+': '+error);return;}}
   setBusy(true);let persisted=true;const additions:Media[]=[];
   if(cloud){try{for(const file of files){const id=kind==='video'?'showreel':crypto.randomUUID();additions.push(remote(await uploadMedia({id,kind,file})));}setItems(current=>[...current.filter(i=>kind!=='video'||i.kind!=='video'),...additions]);setMessage('Upload saved to your account.');}catch(error){setItems(current=>[...current.filter(i=>kind!=='video'||!additions.length||i.kind!=='video'),...additions]);setMessage(error instanceof Error?error.message:'Upload failed. Please retry.');}finally{setBusy(false);}return;}
-  try{for(const file of files){const item:StoredMedia={id:kind==='video'?'showreel':crypto.randomUUID(),kind,file,created:Date.now()};try{await stored('put',item);}catch{persisted=false;}additions.push(attach(item));}
+  try{if(kind==='video')for(const previous of items.filter(item=>item.kind==='video')){try{await stored('delete',previous.id);}catch{persisted=false;}}
+   for(const file of files){const item:StoredMedia={id:ownerId?crypto.randomUUID():kind==='video'?'showreel':crypto.randomUUID(),kind,file,created:Date.now(),ownerId};try{await stored('put',item);}catch{persisted=false;}additions.push(attach(item));}
    if(kind==='video')items.filter(i=>i.kind==='video').forEach(i=>{URL.revokeObjectURL(i.url);urls.current.delete(i.url);});
    setItems(current=>[...current.filter(i=>kind!=='video'||i.kind!=='video'),...additions]);setMessage(persisted?(kind==='photo'?'Photos added and saved on this device.':'Video added and saved on this device.'):'Files added for this session. Device storage could not save them; keep this page open.');
   }finally{setBusy(false);}

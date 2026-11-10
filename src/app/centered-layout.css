@@ -71,6 +71,19 @@
   backdrop-filter: blur(16px);
 }
 
+.onboard-access {
+  max-width: 720px;
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 16px;
+  padding: clamp(32px, 6vw, 70px);
+}
+.onboard-access h1 { font: 600 clamp(30px, 4vw, 48px)/1.15 var(--serif); margin: 0; }
+.onboard-access p { max-width: 520px; line-height: 1.7; color: var(--ob-muted); margin: 0 0 12px; }
+
 @media (max-width: 760px) {
   .onboard-layout { min-height: calc(100dvh - 85px); padding: 18px 10px 38px; }
   .onboard-scene { height: 280px; }
